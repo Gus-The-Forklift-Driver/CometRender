@@ -1,0 +1,11 @@
+{
+    "cube": {
+        "blend_file": "cube",
+        "frame_range": [
+            10,
+            250
+        ]
+    },
+    "sphere": {},
+    "monky": {}
+}
