@@ -1,5 +1,6 @@
-{
-    "cube": {
+[
+    {
+        "task_name": "cube",
         "blend_file": "cube",
         "frame_range": [
             10,
@@ -14,8 +15,54 @@
         "view_layer": "view_layer",
         "passes": [
             "combined"
-        ]
+        ],
+        "status": {
+            "current_status": "TODO",
+            "reties": 0
+        }
     },
-    "sphere": {},
-    "monky": {}
-}
+    {
+        "task_name": "monkey",
+        "blend_file": "monky",
+        "frame_range": [
+            10,
+            250,
+            1
+        ],
+        "render_size": [
+            1920,
+            1080
+        ],
+        "render_engine": "cycles",
+        "view_layer": "view_layer",
+        "passes": [
+            "combined"
+        ],
+        "status": {
+            "current_status": "TODO",
+            "reties": 0
+        }
+    },
+    {
+        "task_name": "sphere",
+        "blend_file": "sphere",
+        "frame_range": [
+            10,
+            250,
+            1
+        ],
+        "render_size": [
+            1920,
+            1080
+        ],
+        "render_engine": "cycles",
+        "view_layer": "view_layer",
+        "passes": [
+            "combined"
+        ],
+        "status": {
+            "current_status": "TODO",
+            "reties": 0
+        }
+    }
+]

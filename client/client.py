@@ -15,15 +15,17 @@ while True:
     break
 
 while True:
-    next_task = client.get_next_task()
-    if next_task == None:
+    task = client.get_next_task()
+
+    if task == None:
         break
     else:
-        task_name = next_task['task_name']
-        print(f'starting {next_task}')
+        task_name = task['task_name']
+        task_blend_file = task['blend_file']
+        print(f'starting {task}')
 
         try:
-            bpy.ops.wm.open_mainfile(filepath=f'./test/{task_name}.blend')
+            bpy.ops.wm.open_mainfile(filepath=f'./test/{task_blend_file}.blend')
             bpy.ops.render.render(write_still=True)
         except:
             client.post_progress(task_name, 'FAILED')

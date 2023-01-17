@@ -5,12 +5,13 @@ from os import path
 
 
 def verify_key(key: str):
-    f = open('./apiKeys', 'r')
-    for line in f:
-        if key == line.strip('\n'):
-            f.close
-            return True
-    return False
+    # f = open('./apiKeys', 'r')
+    # for line in f:
+    #     if key == line.strip('\n'):
+    #         f.close
+    #         return True
+    # return False
+    return True
 
 
 class TaskManager:
@@ -21,21 +22,13 @@ class TaskManager:
             try:
                 with open('current_status.json', 'r') as file:
                     current_status = json.load(file)
-                    self.tasks = current_status["task_list"]
-                    self.current_tasks = current_status["current_tasks"]
-                    self.done_tasks = current_status["done_tasks"]
+                    self.tasks = current_status
                     print(current_status)
             except:
                 print('WARNING : invalid current status data')
-                self.tasks = {}
-                self.current_tasks = {}
-                self.done_tasks = {}
                 self.load_tasks_from_file()
         # if previous state doesnt exist
         else:
-            self.tasks = {}
-            self.current_tasks = {}
-            self.done_tasks = {}
             self.load_tasks_from_file()
 
         pass
@@ -47,34 +40,27 @@ class TaskManager:
         print(self.tasks)
 
     def get_next_task(self):
-        if len(self.tasks) == 0:
-            return None
-        else:
-            task_name = list(self.tasks.keys())[0]
-            next_task = self.tasks.pop(task_name)
-            self.current_tasks[task_name] = next_task
-            print(self.current_tasks)
-            return {'task_name': task_name, 'task': next_task}
+        for task in range(len(self.tasks)):
+            if self.tasks[task]["status"]["current_status"] == 'TODO':
+                self.tasks[task]["status"]["current_status"] = 'RUNNING'
+                return self.tasks[task]
+        # no valid tasks have been found
+        return None
 
     def mark_task_done(self, task_name):
-        try:
-            self.done_tasks[task_name] = self.current_tasks.pop(task_name)
-        except KeyError:
-            return 'Task does not exist'
-        return 'Done'
+        for index in range(len(self.tasks)):
+            if self.tasks[index]["task_name"] == task_name:
+                self.tasks[index]["status"]["current_status"] = 'DONE'
+                return 'Done'
+        return 'Task does not exist'
 
     def mark_task_failed(self, task_name):
-        try:
-            self.tasks[task_name] = self.current_tasks.pop(task_name)
-        except KeyError:
-            return 'Task does not exist'
-        return 'Done'
+        for index in range(len(self.tasks)):
+            if self.tasks[index]["task_name"] == task_name:
+                self.tasks[index]["status"]["current_status"] = 'FAILED'
+                return 'Done'
+        return 'Task does not exist'
 
     def save_current_status(self):
         with open('./current_status.json', 'w') as file:
-            current_status = {}
-            current_status["task_list"] = self.tasks
-            current_status["current_tasks"] = self.current_tasks
-            current_status["done_tasks"] = self.done_tasks
-
-            json.dump(current_status, file)
+            json.dump(self.tasks, file)

@@ -2,7 +2,7 @@ import requests
 
 
 class client():
-    def __init__(self,  apiKey: str, adress: str = 'http://127.0.0.1:8000'):
+    def __init__(self,  apiKey: str, adress: str = 'http://127.0.0.1'):
         self.apiKey = apiKey
         self.adress = adress
 
