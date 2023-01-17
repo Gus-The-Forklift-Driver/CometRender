@@ -1,9 +1,8 @@
 # https://fastapi.tiangolo.com/tutorial/path-params/
-from http.client import ImproperConnectionState
-import json
 from fastapi import FastAPI, Header
 import utils
 import datetime
+import frontend
 
 app = FastAPI()
 
@@ -44,8 +43,8 @@ async def update_progress(task_name: str, status: str | float, key: str | None =
     else:
         return 'wtf'
 
+frontend.init(app)
 
 if __name__ == '__main__':
-    import os
-    uvicorn_location = 'C:/Users/benhu/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.10_qbz5n2kfra8p0/LocalCache/local-packages/Python310/Scripts/'
-    os.system(uvicorn_location+'uvicorn server:app --reload')
+    import uvicorn
+    uvicorn.run('server:app', reload=True)
