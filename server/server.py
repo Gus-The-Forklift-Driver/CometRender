@@ -47,4 +47,4 @@ frontend.init(app)
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run('server:app', reload=True)
+    uvicorn.run('server:app', reload=True, host='0.0.0.0', port=80)

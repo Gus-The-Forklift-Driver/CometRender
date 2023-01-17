@@ -3,7 +3,17 @@
         "blend_file": "cube",
         "frame_range": [
             10,
-            250
+            250,
+            1
+        ],
+        "render_size": [
+            1920,
+            1080
+        ],
+        "render_engine": "cycles",
+        "view_layer": "view_layer",
+        "passes": [
+            "combined"
         ]
     },
     "sphere": {},
