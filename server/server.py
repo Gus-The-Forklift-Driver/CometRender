@@ -1,7 +1,7 @@
 # https://fastapi.tiangolo.com/tutorial/path-params/
 from fastapi import FastAPI, Header
 import utils
-import frontend
+#import frontend
 
 app = FastAPI()
 
@@ -46,7 +46,7 @@ def task_list():
     return task_manager.tasks
 
 
-frontend.init(app, task_manager)
+#frontend.init(app, task_manager)
 
 if __name__ == '__main__':
     import uvicorn
