@@ -31,7 +31,7 @@ class TaskManager:
         else:
             self.load_tasks_from_file()
 
-        pass
+        self.restart_threshold = -1
 
     def load_tasks_from_file(self, file_path='./task_list.json'):
         print('INFO : loading TASKS form file : ')
@@ -58,8 +58,18 @@ class TaskManager:
         for index in range(len(self.tasks)):
             if self.tasks[index]["task_name"] == task_name:
                 self.tasks[index]["status"]["current_status"] = 'FAILED'
-                return 'Done'
-        return 'Task does not exist'
+
+        # check if all tasks left are failed if so retry them
+        todo_task = 0
+        for index in range(len(self.tasks)):
+            if self.tasks[index]["status"]["current_status"] == 'TODO':
+                todo_task += 1
+        if todo_task == 0:
+            for index in range(len(self.tasks)):
+                if self.tasks[index]["status"]["current_status"] == 'FAILED':
+                    if self.tasks[index]["status"]["retries"] < self.restart_threshold or self.restart_threshold == -1:
+                        self.tasks[index]["status"]["current_status"] = 'TODO'
+        return 'Done'
 
     def save_current_status(self):
         with open('./current_status.json', 'w') as file:

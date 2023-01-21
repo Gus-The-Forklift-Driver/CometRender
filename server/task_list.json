@@ -11,14 +11,14 @@
             1920,
             1080
         ],
-        "render_engine": "CYCLES",
+        "render_engine": "BLENDER_EEVEE",
         "view_layer": "view_layer",
         "passes": [
             "combined"
         ],
         "status": {
             "current_status": "TODO",
-            "reties": 0
+            "retries": 0
         }
     },
     {
@@ -40,7 +40,7 @@
         ],
         "status": {
             "current_status": "TODO",
-            "reties": 0
+            "retries": 0
         }
     },
     {
@@ -62,7 +62,7 @@
         ],
         "status": {
             "current_status": "TODO",
-            "reties": 0
+            "retries": 0
         }
     }
 ]

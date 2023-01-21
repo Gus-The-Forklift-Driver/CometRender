@@ -8,8 +8,9 @@ import bpy
 import coloredlogs
 from client_boilerplate import client as bpclient
 
-# logger.setLevel(logging.DEBUG)
-coloredlogs.install()
+
+# coloredlogs.install(level=logging.DEBUG)
+coloredlogs.install(level=logging.INFO)
 
 try:
     logging.info('Loading configuration file')
@@ -28,6 +29,7 @@ task = None
 
 
 def main():
+    sleep(1)
     global task
     sleep_times = [5, 10, 15]
     sleep_iteration = 0
@@ -65,7 +67,7 @@ def main():
                     # engine
                     current_scene.render.engine = task['render_engine']
                     # view layer
-                    bpy.context.window.view_layer = task['view_layer']
+                    bpy.context.window.view_layer.name = task['view_layer']
 
                 except Exception as e:
                     logging.error('Problem with task settings', exc_info=True)
@@ -76,11 +78,11 @@ def main():
                 except Exception as e:
                     logging.error('Problem with render', exc_info=True)
                     client.post_progress(task_name, 'FAILED')
-
                 else:
                     client.post_progress(task_name, 'DONE')
             else:
-                logging.error(f"Cannot read file '{config['working_dir']}{task_blend_file}.blend'")
+                logging.error(f"File doesn't exist : '{config['working_dir']}{task_blend_file}.blend'")
+                logging.info(path.abspath(f"{config['working_dir']}{task_blend_file}.blend"))
                 client.post_progress(task_name, 'FAILED')
 
     logging.info('this shouldnt print')
