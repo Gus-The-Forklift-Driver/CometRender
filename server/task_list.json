@@ -11,7 +11,7 @@
             1920,
             1080
         ],
-        "render_engine": "cycles",
+        "render_engine": "CYCLES",
         "view_layer": "view_layer",
         "passes": [
             "combined"
@@ -33,7 +33,7 @@
             1920,
             1080
         ],
-        "render_engine": "cycles",
+        "render_engine": "CYCLES",
         "view_layer": "view_layer",
         "passes": [
             "combined"
@@ -55,7 +55,7 @@
             1920,
             1080
         ],
-        "render_engine": "cycles",
+        "render_engine": "CYCLES",
         "view_layer": "view_layer",
         "passes": [
             "combined"

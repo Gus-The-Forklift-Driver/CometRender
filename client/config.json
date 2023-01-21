@@ -1,6 +1,6 @@
 {
-    "blender_bin": "D:\\Games\\Steam\\steamapps\\common\\Blender\\blender.exe",
-    "server_ip": "http://127.0.0.1",
+    "blender_bin": "/snap/bin/blender",
+    "server_ip": "http://127.0.0.1:8000",
     "api_key": "DEMO",
     "working_dir": ".\\test\\"
 }
