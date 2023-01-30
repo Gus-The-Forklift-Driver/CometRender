@@ -39,15 +39,17 @@ with dpg.window(tag='main_window'):
     dpg.add_separator()
     dpg.add_input_text(label='Task name')
     dpg.add_input_text(label='Blend file')
+    dpg.add_input_text(label='View layer')
     with dpg.group(horizontal=True,):
-        dpg.add_input_int(width=90)
-        dpg.add_input_int(width=90)
-        dpg.add_input_int(width=90)
+        dpg.add_input_int(width=120)
+        dpg.add_input_int(width=120)
+        dpg.add_input_int(width=120)
         dpg.add_text('frame range')
         _help('1 : start\n'
               '2 : end\n'
               '3 : step\n')
-    dpg.add_combo(("cycles"))
+    dpg.add_combo(('CYCLES', 'BLENDER_EEVEE', 'BLENDER_WORKBENCH'), label='Render engine', default_value='CYCLES')
+
 
 dpg.setup_dearpygui()
 dpg.show_viewport()
