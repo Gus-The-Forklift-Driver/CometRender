@@ -24,3 +24,7 @@ class client():
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def ping(self):
         return requests.get(url=f'{self.adress}/ping')
+
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
+    def get_task_list(self):
+        return requests.get(url=f'{self.adress}/task_list').json()
