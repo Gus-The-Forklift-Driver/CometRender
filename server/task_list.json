@@ -1,6 +1,6 @@
 [
     {
-        "task_name": "cube",
+        "name": "cube",
         "blend_file": "cube",
         "frame_range": [
             10,
@@ -22,7 +22,7 @@
         }
     },
     {
-        "task_name": "monkey",
+        "name": "monkey",
         "blend_file": "monky",
         "frame_range": [
             10,
@@ -44,7 +44,7 @@
         }
     },
     {
-        "task_name": "sphere",
+        "name": "sphere",
         "blend_file": "sphere",
         "frame_range": [
             10,
