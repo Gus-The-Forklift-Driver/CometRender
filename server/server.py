@@ -2,10 +2,11 @@
 from fastapi import FastAPI, Header
 import utils
 #import frontend
+import task_manager
 
 app = FastAPI()
 
-task_manager = utils.TaskManager()
+task_manager = task_manager.TaskManager()
 
 
 @app.get("/")
@@ -21,29 +22,26 @@ async def ping():
 @app.get('/next_task')
 def next_task(key: str | None = Header(default=None)):
     if utils.verify_key(key):
-        next_task = task_manager.get_next_task()
-        task_manager.save_current_status()
-        return next_task
+        next_task, chunk = task_manager.get_next_task()
+        task_manager.save_tasks_to_file()
+        return next_task, chunk
 
 
-@app.post('/progress/{task_name}')
-def update_progress(task_name: str, status: str | float, key: str | None = Header(default=None)):
+@app.post('/progress/{task_uuid}')
+def update_progress(task_uuid: str, chunk: str | float, status: str | float, key: str | None = Header(default=None)):
     if utils.verify_key(key):
-        if status == 'DONE':
-            internal_status = task_manager.mark_task_done(task_name)
-            task_manager.save_current_status()
-            return internal_status
-        elif status == 'FAILED':
-            internal_status = task_manager.mark_task_failed(task_name)
-            task_manager.save_current_status()
-            return internal_status
-        else:
-            return 'wtf'
+        chunk = list(eval(chunk))
+        task_manager.change_chunk_status(task_uuid, chunk, status)
 
 
 @app.get('/task_list')
 def task_list():
     return task_manager.tasks
+
+
+@app.get('/task_names')
+def task_list():
+    return task_manager.get_tasks_names()
 
 
 #frontend.init(app, task_manager)
