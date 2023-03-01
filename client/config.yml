@@ -1,0 +1,7 @@
+client:
+  blender_bin: blender not found
+  name: worker00
+  working_dir: ./
+server:
+  ip: http://127.0.0.1:8000
+  key: demo

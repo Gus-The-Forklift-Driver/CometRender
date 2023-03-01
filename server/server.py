@@ -1,12 +1,16 @@
 # https://fastapi.tiangolo.com/tutorial/path-params/
-from fastapi import FastAPI, Header
+from email.policy import default
+from pickle import TRUE
+from fastapi import Body, FastAPI, Header, Query
+from pydantic import BaseModel
 import utils
-#import frontend
+# import frontend
 import task_manager
 
 app = FastAPI()
 
 task_manager = task_manager.TaskManager()
+task_manager.load_tasks_from_file()
 
 
 @app.get("/")
@@ -34,6 +38,15 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, key
         task_manager.change_chunk_status(task_uuid, chunk, status)
 
 
+@app.post('/error/{task_uuid}')
+def add_error(task_uuid: str, data=Body(), key: str | None = Header(default=None)):
+    if utils.verify_key(key):
+        result = {'uuid': task_uuid, 'data': data}
+        print(result)
+        # task_manager.add_error(task_uuid, data)
+        return result
+
+
 @app.get('/task_list')
 def task_list():
     return task_manager.tasks
@@ -44,7 +57,7 @@ def task_list():
     return task_manager.get_tasks_names()
 
 
-#frontend.init(app, task_manager)
+# frontend.init(app, task_manager)
 
 if __name__ == '__main__':
     import uvicorn

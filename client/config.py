@@ -1,20 +1,38 @@
 import json
+import platform
+import yaml
 import shutil
 import dearpygui.dearpygui as dpg
 import bpy
+import utils
 
+default_config = {
+    "client": {
+        "blender_bin": "blender not found",
+        "name": "worker00",
+        "working_dir": "./"
+    },
+    "server": {
+        "ip": "http://127.0.0.1:8000",
+        "key": "demo"
+    }
+}
 
-with open('config.json', 'r') as file:
-    config = json.load(file)
-    print('Loaded_config : ')
-    print(json.dumps(config, indent=4))
-if config['blender_bin'] == '' or config['blender_bin'] == 'blender not found':
-    config['blender_bin'] = shutil.which("blender")
-    if config['blender_bin']:
-        print("Found:", config['blender_bin'])
-        bpy.app.binary_path = config['blender_bin']
+try:
+    config = utils.load_config('./config.yml')
+except:
+    config = default_config
+
+config['client']['name'] = platform.node()
+print(json.dumps(config, indent=4))
+# try to detect blender location
+if config['client']['blender_bin'] == '' or config['client']['blender_bin'] == 'blender not found':
+    config['client']['blender_bin'] = shutil.which("blender")
+    if config['client']['blender_bin']:
+        print("Found:", config['client']['blender_bin'])
+        bpy.app.binary_path = config['client']['blender_bin']
     else:
-        config['blender_bin'] = 'blender not found'
+        config['client']['blender_bin'] = 'blender not found'
         print('blender not found')
 
 
@@ -22,7 +40,7 @@ dpg.create_context()
 dpg.create_viewport(title='WorkerConfig', width=600, height=300)
 
 
-def update_config():
+"""def update_config():
     with open('config.json', 'w') as file:
         json.dump({
             'blender_bin': dpg.get_value('blender_bin'),
@@ -30,9 +48,10 @@ def update_config():
             'api_key': dpg.get_value('api_key'),
             'working_dir': dpg.get_value('working_dir'),
         }, file)
-
+"""
 
 # file dialog
+
 
 def file_callback(sender, app_data) -> None:
     # print('OK was clicked.')
@@ -63,28 +82,25 @@ with dpg.file_dialog(
 # end of file dialog
 
 
+def update_config():
+    new_config = {}
+    for category in config:
+        new_config[category] = {}
+        for setting in config[category]:
+            new_config[category][setting] = dpg.get_value(category + '/'+setting)
+            print(category + '/'+setting)
+    utils.save_config(new_config)
+
+
 with dpg.window(tag='main_window'):
-    # blender location
-    with dpg.group(horizontal=True):
-        dpg.add_input_text(
-            tag='blender_bin', default_value=config['blender_bin'], callback=update_config)
-        dpg.add_button(label="Blender.exe location",
-                       callback=lambda: dpg.show_item("file_dialog_id"))
-    dpg.add_separator()
-    # server setup
-    dpg.add_input_text(label='Server IP', tag='server_ip',
-                       callback=update_config, default_value=config['server_ip'])
-    dpg.add_input_text(label='Api key', tag='api_key',
-                       callback=update_config, default_value=config['api_key'])
-    dpg.add_separator()
-    # worker setup
-    with dpg.group(horizontal=True):
-        dpg.add_input_text(tag='working_dir',
-                           default_value=config['working_dir'])
-        dpg.add_button(label="Working dir location",
-                       callback=lambda: dpg.show_item("folder_dialog_id"))
-    dpg.add_separator()
-    dpg.add_button(label='update config', callback=update_config)
+    for category in config:
+        dpg.add_text(f'== {category} ==')
+        for setting in config[category]:
+            with dpg.group(horizontal=True):
+                dpg.add_text(setting)
+                dpg.add_input_text(default_value=config[category][setting], callback=update_config, tag=category + '/'+setting)
+        dpg.add_separator()
+    dpg.add_button(label='update_config', callback=update_config)
 
 dpg.setup_dearpygui()
 dpg.show_viewport()

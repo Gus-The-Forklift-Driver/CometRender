@@ -17,6 +17,14 @@ class client():
             headers={'key': self.apiKey})
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
+    def post_error(self, task_uuid, error):
+        requests.post(
+            url=f'{self.adress}/error/{task_uuid}',
+            data=error,
+            headers={'key': self.apiKey}
+        )
+
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def get_next_task(self):
         return requests.get(url=f'{self.adress}/next_task',
                             headers={'key': self.apiKey}).json()

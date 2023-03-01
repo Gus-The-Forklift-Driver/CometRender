@@ -3,14 +3,16 @@ import logging
 import signal
 from os import path
 from time import sleep
-
+import utils
 import bpy
 import coloredlogs
 from client_boilerplate import client as bpclient
+import platform
 
 
 # coloredlogs.install(level=logging.DEBUG)
 coloredlogs.install(level=logging.INFO)
+
 
 try:
     logging.info('Loading configuration file')
@@ -45,14 +47,14 @@ def main():
             if sleep_iteration < len(sleep_times)-1:
                 sleep_iteration += 1
         else:
-            # reset sleep iterations
+            # reset sleep time
             sleep_iteration = 0
 
             task_name = task['task_name']
             task_blend_file = task['blend_file']
             logging.info(f'Starting task : {task_name}')
             logging.debug(f'Task parameters :' + json.dumps(task, indent=4))
-            if path.exists(f'{config["working_dir"]}{task_blend_file}.blend'):
+            if utils.locate_blend_file(task_blend_file, config["working_dir"]):
                 try:
                     bpy.ops.wm.open_mainfile(filepath=f'{config["working_dir"]}{task_blend_file}.blend')
                     # import configuration
