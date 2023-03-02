@@ -85,6 +85,7 @@ class TaskManager():
             "render_engine": render_engine,
             "view_layer": view_layer,
             "passes": passes,
+            "frame_step": 1,
             "status": {
                 "errors": {}},
             "chunks_todo": chunks,

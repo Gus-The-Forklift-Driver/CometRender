@@ -7,9 +7,10 @@
             1920,
             1080
         ],
-        "render_engine": "BLENDER_EEVEE",
+        "render_engine": "BLENDER_WORKBENCH",
         "view_layer": "ViewLayer",
         "passes": "all",
+        "frame_step": 1,
         "errors": [],
         "chunks_todo": [
             [

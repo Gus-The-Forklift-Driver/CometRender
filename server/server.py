@@ -43,19 +43,19 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, key
 
 
 @app.post('/error/{task_uuid}')
-def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(default=None)):
+async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.log_error(task_uuid, data)
         return
 
 
 @app.get('/task_list')
-def task_list():
+async def task_list():
     return task_manager.tasks
 
 
 @app.get('/task_names')
-def task_list():
+async def task_list():
     return task_manager.get_tasks_names()
 
 

@@ -79,7 +79,7 @@ def main():
                         # frame range
                         current_scene.frame_start = chunk[0]
                         current_scene.frame_end = chunk[1]
-                        current_scene.frame_step = task['frame_range'][2]
+                        current_scene.frame_step = task['frame_step']
                         # engine
                         current_scene.render.engine = task['render_engine']
                         # view layer
@@ -95,7 +95,7 @@ def main():
                             logging.error('Problem with render', exc_info=True)
                             client.post_error(task['uuid'], 'pb_render', str(e))
                         else:
-                            client.post_progress(task_name, 'DONE')
+                            client.post_progress(task_uuid=task['uuid'], chunk=chunk, status="chunks_done")
             else:
                 logging.error(f"File doesn't exist : '{config['worker']['working_dir']}{task_blend_file}.blend'")
                 logging.info(f"file should be here {config['worker']['working_dir']}{task_blend_file}.blend")
