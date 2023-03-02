@@ -1,4 +1,5 @@
 from time import sleep
+import time
 from matplotlib.pyplot import bar_label
 import requests
 
@@ -6,9 +7,10 @@ from retry import retry
 
 
 class client():
-    def __init__(self,  apiKey: str, adress: str = 'http://127.0.0.1'):
+    def __init__(self, name: str, apiKey: str, adress: str = 'http://127.0.0.1'):
         self.apiKey = apiKey
         self.adress = adress
+        self.name = name
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def post_progress(self, task_uuid, chunk, status):
@@ -17,10 +19,16 @@ class client():
             headers={'key': self.apiKey})
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
-    def post_error(self, task_uuid, error):
+    def post_error(self, task_uuid, error_type, error_info):
+        error_msg = {
+            'worker_name': self.name,
+            'time': str(time.time()),
+            'type': error_type,
+            'info': error_info
+        }
         requests.post(
             url=f'{self.adress}/error/{task_uuid}',
-            data=error,
+            json=error_msg,
             headers={'key': self.apiKey}
         )
 

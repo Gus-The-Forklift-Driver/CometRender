@@ -1,4 +1,4 @@
-client:
+worker:
   blender_bin: blender not found
   name: worker00
   working_dir: ./

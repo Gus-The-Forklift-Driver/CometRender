@@ -1,3 +1,4 @@
+import logging
 import yaml
 import bpy
 import os
@@ -10,14 +11,14 @@ def check_external_files():
     missing_files = []
     root = os.path.dirname(bpy.data.filepath)
     os.chdir(root)
-    print(root)
+    logging.info(root)
     for img in bpy.data.images:
         if img.filepath != None and len(img.filepath) > 0:
             relative_filepath = img.filepath.replace('//', '')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
             # print(f'IMAGE | {os.path.join(root,filepath)}')
-            print(f'IMAGE | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            logging.info(f'IMAGE | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
                 missing_files.append(relative_filepath)
 
@@ -26,7 +27,7 @@ def check_external_files():
             relative_filepath = cache.filepath.replace('//', '')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
-            print(f'CACHE | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            logging.info(f'CACHE | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
                 missing_files.append(relative_filepath)
 
@@ -35,7 +36,7 @@ def check_external_files():
             relative_filepath = library.filepath.replace('//', '')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
-            print(f'library | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            logging.info(f'library | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
                 missing_files.append(relative_filepath)
 
@@ -45,7 +46,6 @@ def check_external_files():
 def locate_blend_file(blend: str, root: str = f'.{os.sep}'):
     for root, dirs, files in os.walk(root):
         for file in files:
-            print(file)
             if file == blend + '.blend':
                 return os.path.join(root, file)
     # no files matching the name were found

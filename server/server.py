@@ -1,6 +1,9 @@
 # https://fastapi.tiangolo.com/tutorial/path-params/
 from email.policy import default
+import json
 from pickle import TRUE
+
+from matplotlib.font_manager import json_load
 from fastapi import Body, FastAPI, Header, Query
 from pydantic import BaseModel
 import utils
@@ -27,7 +30,8 @@ async def ping():
 def next_task(key: str | None = Header(default=None)):
     if utils.verify_key(key):
         next_task, chunk = task_manager.get_next_task()
-        task_manager.save_tasks_to_file()
+        if next_task != None:
+            task_manager.save_tasks_to_file()
         return next_task, chunk
 
 
@@ -39,12 +43,10 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, key
 
 
 @app.post('/error/{task_uuid}')
-def add_error(task_uuid: str, data=Body(), key: str | None = Header(default=None)):
+def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
-        result = {'uuid': task_uuid, 'data': data}
-        print(result)
-        # task_manager.add_error(task_uuid, data)
-        return result
+        task_manager.log_error(task_uuid, data)
+        return
 
 
 @app.get('/task_list')

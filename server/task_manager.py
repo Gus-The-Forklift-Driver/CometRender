@@ -45,7 +45,7 @@ class TaskManager():
                 logging.info(f'Sending task named : {self.tasks[task_id]["name"]} | {chunk}')
                 return self.tasks[task_id], chunk
         # no valid tasks have been found
-        return None
+        return None, None
 
     def get_tasks_names(self):
         tasks_names = []
@@ -101,6 +101,8 @@ class TaskManager():
     def change_chunk_status(self, uuid, chunk, status):
         for task_id in range(len(self.tasks)):
             if self.tasks[task_id]['uuid'] == uuid:
+                # this is ugly af because i'm lazy
+                # it works sooooo
                 try:
                     self.tasks[task_id]['chunks_todo'].remove(chunk)
                 except:
@@ -119,16 +121,25 @@ class TaskManager():
         logging.info(f'could not find task with uuid : {uuid}')
         return
 
+    def log_error(self, task_uuid, data):
+
+        for task_id in range(len(self.tasks)):
+            if self.tasks[task_id]['uuid'] == task_uuid:
+                self.tasks[task_id]['errors'].append(data)
+                return
+        logging.error(f'Task with uuid {task_uuid} wasnt found')
+        return
+
 
 if __name__ == '__main__':
     # just run some tests
     task = TaskManager()
     task.load_tasks_from_file()
-    #a = task.get_next_task()
+    # a = task.get_next_task()
     # task.add_task_by_dict(a)
 
-    #task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
-    #task.add_task_by_settings('test2', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    # task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
+    # task.add_task_by_settings('test2', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
 
     task.get_next_task()
 

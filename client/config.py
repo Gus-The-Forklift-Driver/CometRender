@@ -7,7 +7,7 @@ import bpy
 import utils
 
 default_config = {
-    "client": {
+    "worker": {
         "blender_bin": "blender not found",
         "name": "worker00",
         "working_dir": "./"
@@ -23,16 +23,16 @@ try:
 except:
     config = default_config
 
-config['client']['name'] = platform.node()
+config['worker']['name'] = platform.node()
 print(json.dumps(config, indent=4))
 # try to detect blender location
-if config['client']['blender_bin'] == '' or config['client']['blender_bin'] == 'blender not found':
-    config['client']['blender_bin'] = shutil.which("blender")
-    if config['client']['blender_bin']:
-        print("Found:", config['client']['blender_bin'])
-        bpy.app.binary_path = config['client']['blender_bin']
+if config['worker']['blender_bin'] == '' or config['worker']['blender_bin'] == 'blender not found':
+    config['worker']['blender_bin'] = shutil.which("blender")
+    if config['worker']['blender_bin']:
+        print("Found:", config['worker']['blender_bin'])
+        bpy.app.binary_path = config['worker']['blender_bin']
     else:
-        config['client']['blender_bin'] = 'blender not found'
+        config['worker']['blender_bin'] = 'blender not found'
         print('blender not found')
 
 
