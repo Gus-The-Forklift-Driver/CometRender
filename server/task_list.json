@@ -1,14 +1,14 @@
 [
     {
         "uuid": "860dd42e-b012-416f-8a46-965132c40bcf",
-        "name": "bloop",
-        "blend_file": "boopsblend",
+        "name": "sequence_01",
+        "blend_file": "sequence_01",
         "render_size": [
-            1024,
-            2048
+            1920,
+            1080
         ],
-        "render_engine": "CYCLES",
-        "view_layer": "view_layer",
+        "render_engine": "BLENDER_EEVEE",
+        "view_layer": "ViewLayer",
         "passes": "all",
         "errors": [],
         "chunks_todo": [
@@ -39,127 +39,6 @@
             [
                 316,
                 366
-            ],
-            [
-                367,
-                417
-            ],
-            [
-                418,
-                500
-            ],
-            [
-                469,
-                500
-            ]
-        ],
-        "chunks_running": [],
-        "chunks_done": []
-    },
-    {
-        "uuid": "74872aaf-e3be-4f94-aa3f-26d824da0f7d",
-        "name": "test2",
-        "blend_file": "anotherone",
-        "render_size": [
-            1920,
-            1024
-        ],
-        "render_engine": "CYCLES",
-        "view_layer": "view_layer",
-        "passes": "all",
-        "errors": [],
-        "chunks_todo": [
-            [
-                1,
-                11
-            ],
-            [
-                12,
-                22
-            ],
-            [
-                23,
-                33
-            ],
-            [
-                34,
-                44
-            ],
-            [
-                45,
-                55
-            ],
-            [
-                56,
-                66
-            ],
-            [
-                67,
-                77
-            ],
-            [
-                78,
-                88
-            ],
-            [
-                89,
-                99
-            ],
-            [
-                100,
-                110
-            ],
-            [
-                111,
-                121
-            ],
-            [
-                122,
-                132
-            ],
-            [
-                133,
-                143
-            ],
-            [
-                144,
-                154
-            ],
-            [
-                155,
-                165
-            ],
-            [
-                166,
-                176
-            ],
-            [
-                177,
-                187
-            ],
-            [
-                188,
-                198
-            ],
-            [
-                199,
-                209
-            ],
-            [
-                210,
-                220
-            ],
-            [
-                221,
-                231
-            ],
-            [
-                232,
-                250
-            ],
-            [
-                243,
-                250
             ]
         ],
         "chunks_running": [],

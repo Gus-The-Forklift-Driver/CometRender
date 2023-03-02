@@ -62,7 +62,7 @@ def main():
                 except Exception as e:
                     logging.error('Problem with loading .blend file', exc_info=True)
                     client.post_error(task['uuid'], 'pb_blendfile', str(e))
-
+                else:
                     missing_files = utils.check_external_files()
                     if len(missing_files) > 0:
                         logging.error(f'Missing external files : ')
@@ -88,7 +88,7 @@ def main():
                     except Exception as e:
                         logging.error('Problem with task settings', exc_info=True)
                         client.post_error(task['uuid'], 'pb_settings', str(e))
-
+                    else:
                         try:
                             bpy.ops.render.render(animation=True)
                         except Exception as e:
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        logging.info('User ended task')
+        logging.info('User ended workder')
     except Exception as e:
         logging.critical('', exc_info=True)
     if task != None:

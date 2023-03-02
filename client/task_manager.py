@@ -2,7 +2,7 @@ from pydoc import cli
 import dearpygui.dearpygui as dpg
 from client_boilerplate import client as bpclient
 
-client = bpclient(apiKey='', adress='http://127.0.0.1:8000')
+client = bpclient('manager', apiKey='', adress='http://127.0.0.1:8000')
 
 dpg.create_context()
 dpg.create_viewport(title='te', width=600, height=600)
