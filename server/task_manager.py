@@ -56,7 +56,7 @@ class TaskManager():
     def add_task_by_dict(self, task_info: dict):
         try:
             self.tasks.append(task_info)
-            logging.info(f'Added task named : {task_info["task_name"]}')
+            logging.info(f'Added task named : {task_info["name"]}')
             return 0
         except Exception as e:
             logging.error('Failed to add task', exc_info=True)
@@ -86,16 +86,22 @@ class TaskManager():
             "view_layer": view_layer,
             "passes": passes,
             "frame_step": 1,
+            "output_path": "./",
             "status": {
                 "errors": {}},
             "chunks_todo": chunks,
             "chunks_running": [],
-            "chunks_done": [], })
+            "chunks_done": [],
+            "chunks_error": []})
 
     def print_current_status(self):
         display = copy.deepcopy(self.tasks)
         for id in range(len(display)):
             display[id].pop('uuid')
+            display[id].pop('chunks_todo')
+            display[id].pop('chunks_running')
+            display[id].pop('chunks_done')
+            display[id].pop('chunks_error')
 
         print(taaab(display, headers="keys"))
 
@@ -116,6 +122,10 @@ class TaskManager():
                     self.tasks[task_id]['chunks_done'].remove(chunk)
                 except:
                     pass
+                try:
+                    self.tasks[task_id]['chunks_error'].remove(chunk)
+                except:
+                    pass
                 self.tasks[task_id][status].append(chunk)
                 logging.info(f'Moved {chunk} to {status} for {self.tasks[task_id]["name"]}')
                 return
@@ -127,9 +137,28 @@ class TaskManager():
         for task_id in range(len(self.tasks)):
             if self.tasks[task_id]['uuid'] == task_uuid:
                 self.tasks[task_id]['errors'].append(data)
+                logging.info(f'Added new error for {self.tasks[task_id]["name"]} : {data}')
                 return
-        logging.error(f'Task with uuid {task_uuid} wasnt found')
+        logging.error(f'Failed to log error for task with : {task_uuid} uuid')
         return
+
+    def move_task(self, task_uuid: str, offset: int):
+        # clamp the offset
+        offset = max(0, min(offset, len(self.tasks)-1))
+        # find the place of the task in the task array
+        for task_id in range(len(self.tasks)):
+            if self.tasks[task_id]['uuid'] == task_uuid:
+                break
+        self.tasks.insert(task_id + offset, self.tasks.pop(task_id))
+        return
+
+    def delete_task(self, task_uuid: str):
+        for task_id in range(len(self.tasks)):
+            if self.tasks[task_id]['uuid'] == task_uuid:
+                self.tasks.pop(task_id)
+                logging.info(f'Deleted task {self.tasks[task_id]["name"]}')
+                return
+        logging.error(f'Failed to delete task with : {task_uuid} uuid')
 
 
 if __name__ == '__main__':
@@ -139,12 +168,17 @@ if __name__ == '__main__':
     # a = task.get_next_task()
     # task.add_task_by_dict(a)
 
-    # task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
-    # task.add_task_by_settings('test2', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
+    task.add_task_by_settings('test2', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    task.add_task_by_settings('test3', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    task.add_task_by_settings('test4', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    task.add_task_by_settings('test5', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
 
     task.get_next_task()
 
     task.change_chunk_status('860dd42e-b012-416f-8a46-965132c40bcf', list(eval('10, 60')), 'chunks_done')
+
+    task.move_task('860dd42e-b012-416f-8a46-965132c40bcf', 10)
 
     # print(task.get_tasks_names())
     task.print_current_status()

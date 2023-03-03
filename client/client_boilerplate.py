@@ -19,10 +19,11 @@ class client():
             headers={'key': self.apiKey})
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
-    def post_error(self, task_uuid, error_type, error_info):
+    def post_error(self, task_uuid, chunk, error_type, error_info):
         error_msg = {
             'worker_name': self.name,
             'time': str(time.time()),
+            'chunk': chunk,
             'type': error_type,
             'info': error_info
         }

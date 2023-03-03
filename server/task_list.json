@@ -1,8 +1,8 @@
 [
     {
         "uuid": "860dd42e-b012-416f-8a46-965132c40bcf",
-        "name": "sequence_01",
-        "blend_file": "sequence_01",
+        "name": "sequence_02",
+        "blend_file": "sequence_02",
         "render_size": [
             1920,
             1080
@@ -11,6 +11,7 @@
         "view_layer": "ViewLayer",
         "passes": "all",
         "frame_step": 1,
+        "output_path": "./",
         "errors": [],
         "chunks_todo": [
             [
@@ -43,6 +44,7 @@
             ]
         ],
         "chunks_running": [],
-        "chunks_done": []
+        "chunks_done": [],
+        "chunks_error": []
     }
 ]

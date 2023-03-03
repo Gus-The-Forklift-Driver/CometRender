@@ -10,7 +10,7 @@ import utils
 # import frontend
 import task_manager
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 
 task_manager = task_manager.TaskManager()
 task_manager.load_tasks_from_file()
@@ -59,8 +59,13 @@ async def task_list():
     return task_manager.get_tasks_names()
 
 
-# frontend.init(app, task_manager)
+@app.post('/move_task/{task_uuid}')
+def move_task(task_uuid: str, offset: str, key: str | None = Header(default=None)):
+    if utils.verify_key(key):
+        task_manager.move_task(task_uuid, offset)
+    return
 
+    # frontend.init(app, task_manager)
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run('server:app', reload=True, host='0.0.0.0', port=8000)
