@@ -14,6 +14,7 @@ class TaskManager():
     def __init__(self) -> None:
         logging.info('Task manager initialized')
         self.tasks = []
+        self.workers = {}
         # self.load_tasks_from_file()
         pass
 
@@ -87,8 +88,7 @@ class TaskManager():
             "passes": passes,
             "frame_step": 1,
             "output_path": "./",
-            "status": {
-                "errors": {}},
+            "errors": [],
             "chunks_todo": chunks,
             "chunks_running": [],
             "chunks_done": [],
@@ -160,6 +160,35 @@ class TaskManager():
                 return
         logging.error(f'Failed to delete task with : {task_uuid} uuid')
 
+    def add_potential_worker(self, name: str):
+        # logs workers and completed tasks
+        if name in self.workers:
+            self.workers[name] += 1
+        else:
+            self.workers[name] = 1
+
+    def get_task_status(self):
+        status = {}
+        for task in self.tasks:
+            chunk_count = len(task['chunks_todo'])
+            +len(task['chunks_running'])
+            +len(task['chunks_done'])
+            +len(task['chunks_error'])
+            for x in range(chunk_count):
+                pass
+            all_tasks = {}
+            for x in task['chunks_todo']:
+                all_tasks[str(x)] = 'chunks_todo'
+            for x in task['chunks_running']:
+                all_tasks[str(x)] = 'chunks_running'
+            for x in task['chunks_done']:
+                all_tasks[str(x)] = 'chunks_done'
+            for x in task['chunks_error']:
+                all_tasks[str(x)] = 'chunks_error'
+            status[task['name']] = dict(sorted(all_tasks.items(), key=lambda x: x[1]))
+
+        return status
+
 
 if __name__ == '__main__':
     # just run some tests
@@ -182,5 +211,34 @@ if __name__ == '__main__':
 
     # print(task.get_tasks_names())
     task.print_current_status()
+    print(task.get_task_status())
     # task.save_tasks_to_file('./task_list.json')
     logging.info('===DONE===')
+
+'''
+settings for the task settings
+render engine : str
+render settings :
+    max samples : int
+    min samples : int
+    time limit : int
+    denoise : bool
+    OR :
+    leave the default from the file
+light path :
+    (use project defaults)
+output properties :
+    resolution : list of int
+    frame start : int
+    frame end : int
+    step : int (1)
+    filepath : str
+    format : str
+    OR :
+    leave the default from the file
+passes :
+    ...
+    OR :
+    leave the default from the file
+
+'''

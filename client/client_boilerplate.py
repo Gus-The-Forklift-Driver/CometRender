@@ -15,7 +15,7 @@ class client():
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def post_progress(self, task_uuid, chunk, status):
         requests.post(
-            url=f'{self.adress}/progress/{task_uuid}?chunk={chunk[0]},{chunk[1]}&status={status}',
+            url=f'{self.adress}/progress/{task_uuid}?chunk={chunk[0]},{chunk[1]}&status={status}&worker_name={self.name}',
             headers={'key': self.apiKey})
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
@@ -45,4 +45,14 @@ class client():
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def get_task_list(self):
         return requests.get(url=f'{self.adress}/task_list',
+                            headers={'key': self.apiKey}).json()
+
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
+    def get_workers(self):
+        return requests.get(url=f'{self.adress}/workers',
+                            headers={'key': self.apiKey}).json()
+
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
+    def get_task_status(self):
+        return requests.get(url=f'{self.adress}/task_status',
                             headers={'key': self.apiKey}).json()

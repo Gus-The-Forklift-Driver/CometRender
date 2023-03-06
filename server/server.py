@@ -3,11 +3,9 @@ from email.policy import default
 import json
 from pickle import TRUE
 
-from matplotlib.font_manager import json_load
 from fastapi import Body, FastAPI, Header, Query
 from pydantic import BaseModel
 import utils
-# import frontend
 import task_manager
 
 app = FastAPI(docs_url=None, redoc_url=None)
@@ -36,10 +34,11 @@ def next_task(key: str | None = Header(default=None)):
 
 
 @app.post('/progress/{task_uuid}')
-def update_progress(task_uuid: str, chunk: str | float, status: str | float, key: str | None = Header(default=None)):
+def update_progress(task_uuid: str, chunk: str | float, status: str | float, worker_name: str, key: str | None = Header(default=None)):
     if utils.verify_key(key):
         chunk = list(eval(chunk))
         task_manager.change_chunk_status(task_uuid, chunk, status)
+        task_manager.add_potential_worker(worker_name)
 
 
 @app.post('/error/{task_uuid}')
@@ -59,13 +58,22 @@ async def task_list():
     return task_manager.get_tasks_names()
 
 
+@app.get('/workers')
+async def workers():
+    return task_manager.workers
+
+
 @app.post('/move_task/{task_uuid}')
 def move_task(task_uuid: str, offset: str, key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.move_task(task_uuid, offset)
     return
 
-    # frontend.init(app, task_manager)
+
+@app.get('task_status')
+async def task_status():
+    return task_manager.get_task_status()
+
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run('server:app', reload=True, host='0.0.0.0', port=8000)

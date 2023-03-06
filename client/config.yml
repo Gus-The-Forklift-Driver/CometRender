@@ -1,7 +1,7 @@
 server:
-  ip: http://127.0.0.1:8000
+  ip: http://109.0.239.156:8000
   key: demo
 worker:
-  blender_bin: D:\Games\Steam\steamapps\common\Blender\blender.exe
-  name: DESKTOP-RMSABPR
+  blender_bin: C:\Program Files (x86)\Steam\steamapps\common\Blenderblender.exe
+  name: LYOB22W262
   working_dir: D:\OneDrive - Groupe E.D.H\PFE\Rendu\Scenes

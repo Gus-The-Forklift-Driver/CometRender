@@ -5,8 +5,9 @@
 wip
 
 ## Dependecies
-
+ - python 3.10.+
  - coloredLogs
  - (tabulate)
  - uvicorn
  - fastapi
+ - retry

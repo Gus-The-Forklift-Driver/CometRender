@@ -1,13 +1,25 @@
-from pydoc import cli
+from re import T
 import dearpygui.dearpygui as dpg
 from client_boilerplate import client as bpclient
 
 client = bpclient('manager', apiKey='', adress='http://127.0.0.1:8000')
 
 dpg.create_context()
-dpg.create_viewport(title='te', width=600, height=600)
+dpg.create_viewport(title=' ', width=600, height=600)
 
 task_list = client.get_task_list()
+
+
+def get_tasks(prettify: bool = True):
+    tasks = client.get_task_list()
+    if prettify:
+        for id in range(len(tasks)):
+            tasks[id].pop('uuid')
+            tasks[id].pop('chunks_todo')
+            tasks[id].pop('chunks_running')
+            tasks[id].pop('chunks_done')
+            tasks[id].pop('chunks_error')
+    return tasks
 
 
 def _help(message):
@@ -20,12 +32,13 @@ def _help(message):
         dpg.add_text(message)
 
 
-with dpg.window(tag='main_window'):
+with dpg.window(tag='manager'):
     # current task list
+    task_list = get_tasks()
     with dpg.table(header_row=True, resizable=True, tag='display_list', policy=dpg.mvTable_SizingStretchProp):
         for key in task_list[0]:
             dpg.add_table_column(label=key)
-        dpg.add_table_column()
+        dpg.add_table_column(width_fixed=True)
 
         for task in task_list:
             with dpg.table_row():
@@ -49,10 +62,42 @@ with dpg.window(tag='main_window'):
               '2 : end\n'
               '3 : step\n')
     dpg.add_combo(('CYCLES', 'BLENDER_EEVEE', 'BLENDER_WORKBENCH'), label='Render engine', default_value='CYCLES')
+# status window
 
+with dpg.theme(tag='todo'):
+    with dpg.theme_component(dpg.mvButton):
+        dpg.add_theme_color(dpg.mvThemeCol_Button, (120, 184, 221))
+
+with dpg.theme(tag='running'):
+    with dpg.theme_component(dpg.mvButton):
+        dpg.add_theme_color(dpg.mvThemeCol_Button, (220, 220, 170))
+
+with dpg.theme(tag='done'):
+    with dpg.theme_component(dpg.mvButton):
+        dpg.add_theme_color(dpg.mvThemeCol_Button, (50, 149, 131))
+
+with dpg.window(tag='status'):
+    task_list = get_tasks(False)
+    for task in task_list:
+        with dpg.table(header_row=False):
+            row_count = len(task['chunks_todo'])+len(task['chunks_running'])+len(task['chunks_done'])+1
+            for x in range(row_count):
+                dpg.add_table_column()
+            with dpg.table_row():
+                dpg.add_text(default_value=task['name'])
+                for todo in task['chunks_todo']:
+                    dpg.add_button(label=todo, width=-1)
+                    dpg.bind_item_theme(dpg.last_item(), 'todo')
+                for running in task['chunks_running']:
+                    dpg.add_button(label=running, width=-1)
+                    dpg.bind_item_theme(dpg.last_item(), 'running')
+                for running in task['chunks_done']:
+                    dpg.add_button(label=running, width=-1)
+                    dpg.bind_item_theme(dpg.last_item(), 'done')
+        dpg.add_separator()
 
 dpg.setup_dearpygui()
 dpg.show_viewport()
-dpg.set_primary_window('main_window', True)
+# dpg.set_primary_window('manager', True)
 dpg.start_dearpygui()
 dpg.destroy_context()
