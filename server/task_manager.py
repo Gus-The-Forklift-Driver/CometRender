@@ -39,19 +39,20 @@ class TaskManager():
             return None
 
     def get_next_task(self):
-        for task_id in range(len(self.tasks)):
-            if len(self.tasks[task_id]["chunks_todo"]) > 0:
-                chunk = self.tasks[task_id]["chunks_todo"].pop(0)
-                self.tasks[task_id]['chunks_running'].append(chunk)
-                logging.info(f'Sending task named : {self.tasks[task_id]["name"]} | {chunk}')
-                return self.tasks[task_id], chunk
+        for task in self.tasks:
+            for chunk in task['chunks']:
+                if chunk[1] == 'todo':
+                    chunk[1] = 'running'
+                    logging.info(f'Sending task named : {task["name"]} | {chunk[0]}')
+                    return task, chunk[0]
         # no valid tasks have been found
+        logging.info('No task to send')
         return None, None
 
     def get_tasks_names(self):
         tasks_names = []
-        for task_id in range(len(self.tasks)):
-            tasks_names.append(self.tasks[task_id]["name"])
+        for task in self.tasks:
+            tasks_names.append(task["name"])
         return tasks_names
 
     def add_task_by_dict(self, task_info: dict):
@@ -76,7 +77,7 @@ class TaskManager():
                 b = x + chunks_size
                 if frame_range[1]-chunks_size < b:
                     b = frame_range[1]
-                chunks.append((a, b))
+                chunks.append([(a, b), 'todo'])
 
         self.add_task_by_dict({
             "uuid": task_uuid,
@@ -89,46 +90,25 @@ class TaskManager():
             "frame_step": 1,
             "output_path": "./",
             "errors": [],
-            "chunks_todo": chunks,
-            "chunks_running": [],
-            "chunks_done": [],
-            "chunks_error": []})
+            "chunks": chunks, })
 
     def print_current_status(self):
         display = copy.deepcopy(self.tasks)
         for id in range(len(display)):
             display[id].pop('uuid')
-            display[id].pop('chunks_todo')
-            display[id].pop('chunks_running')
-            display[id].pop('chunks_done')
-            display[id].pop('chunks_error')
+            display[id].pop('chunks')
 
         print(taaab(display, headers="keys"))
 
     def change_chunk_status(self, uuid, chunk, status):
-        for task_id in range(len(self.tasks)):
-            if self.tasks[task_id]['uuid'] == uuid:
-                # this is ugly af because i'm lazy
-                # it works sooooo
-                try:
-                    self.tasks[task_id]['chunks_todo'].remove(chunk)
-                except:
-                    pass
-                try:
-                    self.tasks[task_id]['chunks_running'].remove(chunk)
-                except:
-                    pass
-                try:
-                    self.tasks[task_id]['chunks_done'].remove(chunk)
-                except:
-                    pass
-                try:
-                    self.tasks[task_id]['chunks_error'].remove(chunk)
-                except:
-                    pass
-                self.tasks[task_id][status].append(chunk)
-                logging.info(f'Moved {chunk} to {status} for {self.tasks[task_id]["name"]}')
-                return
+        for task in self.tasks:
+            if task['uuid'] == uuid:
+                print(task)
+                for chunk in task['chunks']:
+                    if chunk[0] == chunk:
+                        task['chunks'][chunk] = status
+                        logging.info(f'Moved {chunk} to {status} for {task["name"]}')
+                        return
         logging.info(f'could not find task with uuid : {uuid}')
         return
 
@@ -160,13 +140,15 @@ class TaskManager():
                 return
         logging.error(f'Failed to delete task with : {task_uuid} uuid')
 
-    def add_potential_worker(self, name: str):
+    def add_worker(self, name: str):
         # logs workers and completed tasks
         if name in self.workers:
             self.workers[name] += 1
         else:
             self.workers[name] = 1
 
+
+'''
     def get_task_status(self):
         status = {}
         for task in self.tasks:
@@ -188,30 +170,28 @@ class TaskManager():
             status[task['name']] = dict(sorted(all_tasks.items(), key=lambda x: x[1]))
 
         return status
-
+'''
 
 if __name__ == '__main__':
     # just run some tests
     task = TaskManager()
     task.load_tasks_from_file()
-    # a = task.get_next_task()
-    # task.add_task_by_dict(a)
 
-    task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
-    task.add_task_by_settings('test2', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
-    task.add_task_by_settings('test3', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
-    task.add_task_by_settings('test4', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
-    task.add_task_by_settings('test5', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    # task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
+    # task.add_task_by_settings('test2', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    # task.add_task_by_settings('test3', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    # task.add_task_by_settings('test4', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    # task.add_task_by_settings('test5', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
 
-    task.get_next_task()
+    # task.get_next_task()
+    # task.save_tasks_to_file()
 
-    task.change_chunk_status('860dd42e-b012-416f-8a46-965132c40bcf', list(eval('10, 60')), 'chunks_done')
+    task.change_chunk_status('96a4f353-d23d-46ce-8b44-839c1a9709b4', (10, 60), 'chunks_done')
 
-    task.move_task('860dd42e-b012-416f-8a46-965132c40bcf', 10)
+    # task.move_task('860dd42e-b012-416f-8a46-965132c40bcf', 10)
 
     # print(task.get_tasks_names())
-    task.print_current_status()
-    print(task.get_task_status())
+
     # task.save_tasks_to_file('./task_list.json')
     logging.info('===DONE===')
 

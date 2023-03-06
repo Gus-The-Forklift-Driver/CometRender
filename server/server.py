@@ -38,7 +38,7 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, wor
     if utils.verify_key(key):
         chunk = list(eval(chunk))
         task_manager.change_chunk_status(task_uuid, chunk, status)
-        task_manager.add_potential_worker(worker_name)
+        task_manager.add_worker(worker_name)
 
 
 @app.post('/error/{task_uuid}')
