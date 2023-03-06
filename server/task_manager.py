@@ -100,16 +100,18 @@ class TaskManager():
 
         print(taaab(display, headers="keys"))
 
-    def change_chunk_status(self, uuid, chunk, status):
+    def change_chunk_status(self, uuid, chunk_in, status):
         for task in self.tasks:
             if task['uuid'] == uuid:
                 print(task)
                 for chunk in task['chunks']:
-                    if chunk[0] == chunk:
-                        task['chunks'][chunk] = status
-                        logging.info(f'Moved {chunk} to {status} for {task["name"]}')
+                    if chunk[0] == chunk_in:
+                        chunk[1] = status
+                        logging.info(f'Moved {chunk_in} to {status} for {task["name"]}')
                         return
-        logging.info(f'could not find task with uuid : {uuid}')
+                logging.info(f'Could not find chunk : {chunk_in} for {task["name"]}')
+                return
+        logging.info(f'Could not find task with uuid : {uuid}')
         return
 
     def log_error(self, task_uuid, data):
@@ -148,30 +150,6 @@ class TaskManager():
             self.workers[name] = 1
 
 
-'''
-    def get_task_status(self):
-        status = {}
-        for task in self.tasks:
-            chunk_count = len(task['chunks_todo'])
-            +len(task['chunks_running'])
-            +len(task['chunks_done'])
-            +len(task['chunks_error'])
-            for x in range(chunk_count):
-                pass
-            all_tasks = {}
-            for x in task['chunks_todo']:
-                all_tasks[str(x)] = 'chunks_todo'
-            for x in task['chunks_running']:
-                all_tasks[str(x)] = 'chunks_running'
-            for x in task['chunks_done']:
-                all_tasks[str(x)] = 'chunks_done'
-            for x in task['chunks_error']:
-                all_tasks[str(x)] = 'chunks_error'
-            status[task['name']] = dict(sorted(all_tasks.items(), key=lambda x: x[1]))
-
-        return status
-'''
-
 if __name__ == '__main__':
     # just run some tests
     task = TaskManager()
@@ -186,12 +164,12 @@ if __name__ == '__main__':
     # task.get_next_task()
     # task.save_tasks_to_file()
 
-    task.change_chunk_status('96a4f353-d23d-46ce-8b44-839c1a9709b4', (10, 60), 'chunks_done')
+    task.change_chunk_status('96a4f353-d23d-46ce-8b44-839c1a9709b4', [10, 60], 'done')
 
     # task.move_task('860dd42e-b012-416f-8a46-965132c40bcf', 10)
 
     # print(task.get_tasks_names())
-
+    task.save_tasks_to_file()
     # task.save_tasks_to_file('./task_list.json')
     logging.info('===DONE===')
 

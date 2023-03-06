@@ -48,6 +48,12 @@ async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(def
         return
 
 
+@app.post('/new_task')
+def add_task(data=Body(), key: str | None = Header(default=None)):
+    if utils.verify_key(key):
+        task_manager.add_task_by_dict(data)
+
+
 @app.get('/task_list')
 async def task_list():
     return task_manager.tasks
