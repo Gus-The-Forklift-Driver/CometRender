@@ -5,6 +5,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { Login } from "./Login";
+import { Dashboard } from "./Dashboard";
 
 const TOKEN_KEY = "TOKEN";
 
@@ -19,9 +20,24 @@ export class App extends React.Component<{}, { token: string | null }> {
 
   render() {
     if (!this.state.token) {
-      return <Login onLogin={(k) => this.setState({ token: k })} />;
+      return (
+        <Login
+          onLogin={(k) => {
+            sessionStorage.setItem(TOKEN_KEY, k);
+            this.setState({ token: k });
+          }}
+        />
+      );
     }
 
-    return <p>todo on login</p>;
+    return (
+      <Dashboard
+        token={this.state.token}
+        onLogout={() => {
+          sessionStorage.clear();
+          this.setState({ token: null });
+        }}
+      />
+    );
   }
 }
