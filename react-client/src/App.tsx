@@ -1,16 +1,27 @@
 import React from "react";
-import "./App.css";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { Button, Popover } from "@mui/material";
+import { Login } from "./Login";
 
-export function App() {
-  return (
-    <div className="App">
-      <Button>test</Button>
-    </div>
-  );
+const TOKEN_KEY = "TOKEN";
+
+export class App extends React.Component<{}, { token: string | null }> {
+  constructor(p: any) {
+    super(p);
+
+    this.state = {
+      token: sessionStorage.getItem(TOKEN_KEY),
+    };
+  }
+
+  render() {
+    if (!this.state.token) {
+      return <Login onLogin={(k) => this.setState({ token: k })} />;
+    }
+
+    return <p>todo on login</p>;
+  }
 }
