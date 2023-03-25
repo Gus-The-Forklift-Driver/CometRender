@@ -28,3 +28,8 @@ pip install -r requirements.txt
 ```bash
 python3 server.py
 ```
+
+> You can also do it in Docker:
+> ```bash
+> docker run --rm -ti -p 8000:8000 -u 1000 -w /app -v $(pwd):/app  python:3.10 /bin/bash
+> ```

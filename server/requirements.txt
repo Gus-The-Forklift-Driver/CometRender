@@ -2,3 +2,4 @@ fastapi
 requests
 tabulate
 coloredlogs
+uvicorn

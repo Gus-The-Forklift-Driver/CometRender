@@ -52,6 +52,8 @@ async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(def
 def add_task(data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.add_task_by_dict(data)
+    else:
+        return "Invalid auth"
 
 
 @app.get('/task_list')

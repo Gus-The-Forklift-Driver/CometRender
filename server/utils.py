@@ -5,6 +5,7 @@ from os import path
 
 
 def verify_key(key: str):
+    return key == "CHANGEME"
     # f = open('./apiKeys', 'r')
     # for line in f:
     #     if key == line.strip('\n'):
