@@ -92,7 +92,7 @@ async def workers():
 
 
 @app.post('/move_task/{task_uuid}')
-def move_task(task_uuid: str, offset: str, key: str | None = Header(default=None)):
+def move_task(task_uuid: str, offset: int, key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.move_task(task_uuid, offset)
     return

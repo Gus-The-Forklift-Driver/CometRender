@@ -9,6 +9,7 @@ import {
   Tab,
 } from "@mui/material";
 import React from "react";
+import { TasksManager } from "./TasksManager";
 import { TasksStatus } from "./TasksStatus";
 
 export class Dashboard extends React.Component<
@@ -50,7 +51,9 @@ export class Dashboard extends React.Component<
           <TabPanel value="status">
             <TasksStatus token={this.props.token} />
           </TabPanel>
-          <TabPanel value="task-manager">TODO</TabPanel>
+          <TabPanel value="task-manager">
+            <TasksManager token={this.props.token} />
+          </TabPanel>
         </TabContext>
       </>
     );

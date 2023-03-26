@@ -36,4 +36,20 @@ export class API {
 
     return await req.json();
   }
+
+  static async MoveTask(
+    key: string,
+    task: Task,
+    new_offset: number
+  ): Promise<void> {
+    const req = await fetch(
+      `${api_url}/move_task/${task.uuid}?offset=${new_offset}`,
+      {
+        method: "POST",
+        headers: { key: key },
+      }
+    );
+
+    return await req.json();
+  }
 }
