@@ -4,11 +4,27 @@ import json
 from pickle import TRUE
 
 from fastapi import Body, FastAPI, Header, Query
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import utils
 import task_manager
 
 app = FastAPI(docs_url=None, redoc_url=None)
+
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://localhost:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 task_manager = task_manager.TaskManager()
 task_manager.load_tasks_from_file()
@@ -22,6 +38,10 @@ async def root():
 @app.get("/ping")
 async def ping():
     return 'pong'
+
+@app.get("/check_login")
+def check_login(key: str | None = Header(default=None)):
+    return utils.verify_key(key)
 
 
 @app.get('/next_task')
@@ -52,6 +72,8 @@ async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(def
 def add_task(data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.add_task_by_dict(data)
+    else:
+        return "Invalid auth"
 
 
 @app.get('/task_list')
@@ -70,7 +92,7 @@ async def workers():
 
 
 @app.post('/move_task/{task_uuid}')
-def move_task(task_uuid: str, offset: str, key: str | None = Header(default=None)):
+def move_task(task_uuid: str, offset: int, key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.move_task(task_uuid, offset)
     return
