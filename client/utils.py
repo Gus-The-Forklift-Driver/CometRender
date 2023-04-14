@@ -11,7 +11,7 @@ def check_external_files():
     missing_files = []
     root = os.path.dirname(bpy.data.filepath)
     os.chdir(root)
-    logging.info(root)
+    # logging.info(root)
     for img in bpy.data.images:
         if img.filepath != None and len(img.filepath) > 0:
             relative_filepath = img.filepath.replace('//', '')
@@ -62,6 +62,11 @@ def save_config(config, file='./config.yml'):
     with open(file, 'w') as config_file:
         yaml.dump(config, config_file, yaml.Dumper)
     return
+
+
+def set_settings(settings):
+    current_scene = bpy.context.scene
+    current_scene.render.resolution_x = settings['output_settings']['resolutionX']
 
 
 if __name__ == '__main__':
