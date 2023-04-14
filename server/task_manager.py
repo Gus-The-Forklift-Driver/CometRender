@@ -8,6 +8,70 @@ import coloredlogs
 
 coloredlogs.install(level=logging.INFO)
 
+default_light_path = {
+    'max': 4,
+    'diffuse': 4,
+    'glossy': 4,
+    'transimission': 4,
+    'volume': 0,
+    'transparent': 8
+}
+default_passes = {
+    # data
+    'Combined': 1,
+    'z': 0,
+    'mist': 0,
+    'position': 0,
+    'normal': 0,
+    'vector': 0,
+    # light
+    # diffuse
+    'diff_direct': 0,
+    'diff_indirect': 0,
+    'diff_color': 0,
+    # glossy
+    'glossy_direct': 0,
+    'glossy_indirect': 0,
+    'glossy_color': 0,
+    # transmission
+    'transmission_direct': 0,
+    'transmission_indirect': 0,
+    'transmission_color': 0,
+    # volume
+    'volume_direct': 0,
+    'volume_indirect': 0,
+    'emission': 0,
+    'environment': 0,
+    'ambient_occlusion': 0,
+    'shadow_catcher': 0,
+    # cryptomatte
+    'object': 0,
+    'material': 0,
+    'asset': 0,
+    'levels': 2,
+}
+default_cycles_task = {
+    'uuid': '',
+    'task_name': '',
+    'blend_file': '',
+    'render_settings': {
+        'samples': 1,
+        'time_limit': -1,
+        'light_paths': default_light_path,
+    },
+    'output_settings': {
+        'resolutionX': 1280,
+        'resolutionY': 720,
+        'frame_rate': 24,
+        'frame_start': 1,
+        'frame_end': 100,
+        'output_path': '//frame_####.png',
+        'denoiser': 0,
+        'passes': default_passes,
+
+    }
+}
+
 
 class TaskManager():
 
