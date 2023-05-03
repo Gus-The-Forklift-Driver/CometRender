@@ -9,7 +9,6 @@
         ],
         "render_engine": "CYCLES",
         "view_layer": "view_layer",
-        "passes": "all",
         "frame_step": 1,
         "output_path": "./",
         "errors": [],

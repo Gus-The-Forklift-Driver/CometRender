@@ -13,7 +13,7 @@ import platform
 # coloredlogs.install(level=logging.DEBUG)
 coloredlogs.install(level=logging.INFO)
 
-
+# load worker config
 try:
     logging.info('Loading configuration file')
     config = utils.load_config()
@@ -22,13 +22,13 @@ except Exception as e:
     logging.error('Failed to load configuration')
     logging.debug('', exc_info=True)
     exit()
+# setup client boilerplate
 client = bpclient(name=config['worker']['name'], apiKey=config['server']['key'], adress=config['server']['ip'])
 
 bpy.app.binary_path = config['worker']["blender_bin"]
 
 
 def main():
-    sleep(1)
     global task
     sleep_times = [5, 10, 15]
     sleep_iteration = 0
@@ -37,7 +37,7 @@ def main():
         # get the next task
         task, chunk = client.get_next_task()
 
-        # sleep bc nothing to do
+        # wait until new task
         if task == None:
             logging.info(
                 f'No new tasks, sleeping for {sleep_times[sleep_iteration]} seconds')
@@ -49,11 +49,13 @@ def main():
             # reset sleep time
             sleep_iteration = 0
 
+            # start task
             task_name = task['name']
             task_blend_file = task['blend_file']
             logging.info(f'Starting task : {task_name} | {chunk}')
-
             logging.debug(f'Task parameters :' + json.dumps(task, indent=4))
+
+            # load blendfile
             blend_file_path = utils.locate_blend_file(task_blend_file, config['worker']["working_dir"])
             if blend_file_path != None:
                 # load blendfile this shouldn't raise any error but incase of...
@@ -71,19 +73,7 @@ def main():
                         client.post_error(task['uuid'], 'pb_settings', missing_files)
 
                     try:
-                        # import configuration
-                        current_scene = bpy.context.scene
-                        # render size
-                        current_scene.render.resolution_x = task["render_size"][0]
-                        current_scene.render.resolution_y = task["render_size"][1]
-                        # frame range
-                        current_scene.frame_start = chunk[0]
-                        current_scene.frame_end = chunk[1]
-                        current_scene.frame_step = task['frame_step']
-                        # engine
-                        current_scene.render.engine = task['render_engine']
-                        # view layer
-                        bpy.context.window.view_layer.name = task['view_layer']
+                        utils.set_settings(task, chunk)
 
                     except Exception as e:
                         logging.error('Problem with task settings', exc_info=True)
@@ -104,7 +94,6 @@ def main():
 
         task = None
         chunk = None
-    logging.info('this shouldnt print')
 
 
 def signal_term_handler(signal, frame):
