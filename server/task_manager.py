@@ -8,6 +8,70 @@ import coloredlogs
 
 coloredlogs.install(level=logging.INFO)
 
+default_light_path = {
+    'max': 4,
+    'diffuse': 4,
+    'glossy': 4,
+    'transimission': 4,
+    'volume': 0,
+    'transparent': 8
+}
+default_passes = {
+    # data
+    'Combined': 1,
+    'z': 0,
+    'mist': 0,
+    'position': 0,
+    'normal': 0,
+    'vector': 0,
+    # light
+    # diffuse
+    'diff_direct': 0,
+    'diff_indirect': 0,
+    'diff_color': 0,
+    # glossy
+    'glossy_direct': 0,
+    'glossy_indirect': 0,
+    'glossy_color': 0,
+    # transmission
+    'transmission_direct': 0,
+    'transmission_indirect': 0,
+    'transmission_color': 0,
+    # volume
+    'volume_direct': 0,
+    'volume_indirect': 0,
+    'emission': 0,
+    'environment': 0,
+    'ambient_occlusion': 0,
+    'shadow_catcher': 0,
+    # cryptomatte
+    'object': 0,
+    'material': 0,
+    'asset': 0,
+    'levels': 2,
+}
+default_cycles_task = {
+    'uuid': '',
+    'task_name': '',
+    'blend_file': '',
+    'render_settings': {
+        'samples': 1,
+        'time_limit': -1,
+        'light_paths': default_light_path,
+    },
+    'output_settings': {
+        'resolutionX': 1280,
+        'resolutionY': 720,
+        'frame_rate': 24,
+        'frame_start': 1,
+        'frame_end': 100,
+        'output_path': '//frame_####.png',
+        'denoiser': 0,
+        'passes': default_passes,
+
+    }
+}
+
 
 class TaskManager():
 
@@ -64,31 +128,31 @@ class TaskManager():
             logging.error('Failed to add task', exc_info=True)
             return None
 
-    def add_task_by_settings(self, task_name, blend_file, frame_range, render_size, render_engine, view_layer, passes, chunks_size):
+    def add_task_by_settings(self, task_name, blend_file, frame_start, frame_end, resolution_x, resolution_y, render_engine, scene, chunks_size):
         task_uuid = str(uuid.uuid4())
         chunks = []
         if chunks_size == -1:
-            chunks = {(frame_range[0], frame_range[1]): 'TODO'}
+            chunks = {(frame_start, frame_end): 'TODO'}
         else:
             # creates chunks from settings
             # this does not take into account for the frame step
-            for x in range(frame_range[0], frame_range[1], chunks_size+1):
+            for x in range(frame_start, frame_end, chunks_size+1):
                 a = x
                 b = x + chunks_size
-                if frame_range[1]-chunks_size < b:
-                    b = frame_range[1]
+                if frame_end-chunks_size < b:
+                    b = frame_end
                 chunks.append([(a, b), 'todo'])
 
         self.add_task_by_dict({
             "uuid": task_uuid,
             "name": task_name,
             "blend_file": blend_file,
-            "render_size": render_size,
+            "resolution_x": resolution_x,
+            "resolution_y": resolution_y,
             "render_engine": render_engine,
-            "view_layer": view_layer,
-            "passes": passes,
+            "scene": scene,
             "frame_step": 1,
-            "output_path": "./",
+            "output_path": "//frame_####",
             "errors": [],
             "chunks": chunks, })
 
@@ -153,18 +217,13 @@ class TaskManager():
 if __name__ == '__main__':
     # just run some tests
     task = TaskManager()
-    # task.load_tasks_from_file()
 
-    task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
-    # task.add_task_by_settings('test2', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
-    # task.add_task_by_settings('test3', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
-    # task.add_task_by_settings('test4', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
-    # task.add_task_by_settings('test5', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
+    task.add_task_by_settings('bloop', 'boopsblend', 1, 250, 1920, 1080, 'CYCLES', 'main', 50)
 
     # task.get_next_task()
-    # task.save_tasks_to_file()
+    task.save_tasks_to_file()
 
-    task.change_chunk_status('96a4f353-d23d-46ce-8b44-839c1a9709b4', [10, 60], 'done')
+    # task.change_chunk_status('96a4f353-d23d-46ce-8b44-839c1a9709b4', [10, 60], 'done')
 
     # task.move_task('860dd42e-b012-416f-8a46-965132c40bcf', 10)
 
@@ -172,31 +231,3 @@ if __name__ == '__main__':
     task.save_tasks_to_file()
     # task.save_tasks_to_file('./task_list.json')
     logging.info('===DONE===')
-
-'''
-settings for the task settings
-render engine : str
-render settings :
-    max samples : int
-    min samples : int
-    time limit : int
-    denoise : bool
-    OR :
-    leave the default from the file
-light path :
-    (use project defaults)
-output properties :
-    resolution : list of int
-    frame start : int
-    frame end : int
-    step : int (1)
-    filepath : str
-    format : str
-    OR :
-    leave the default from the file
-passes :
-    ...
-    OR :
-    leave the default from the file
-
-'''
