@@ -1,5 +1,5 @@
 server:
-  ip: http://109.0.239.156:8000
+  ip: http://localhost:8000
   key: demo
 worker:
   blender_bin: C:\Program Files (x86)\Steam\steamapps\common\Blenderblender.exe

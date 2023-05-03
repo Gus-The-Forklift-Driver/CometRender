@@ -1,6 +1,4 @@
-from time import sleep
 import time
-from matplotlib.pyplot import bar_label
 import requests
 
 from retry import retry
@@ -54,5 +52,9 @@ class client():
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def get_task_status(self):
+        return requests.get(url=f'{self.adress}/task_status',
+                            headers={'key': self.apiKey}).json()
+
+    def post_task(self, task):
         return requests.get(url=f'{self.adress}/task_status',
                             headers={'key': self.apiKey}).json()

@@ -153,9 +153,9 @@ class TaskManager():
 if __name__ == '__main__':
     # just run some tests
     task = TaskManager()
-    task.load_tasks_from_file()
+    # task.load_tasks_from_file()
 
-    # task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
+    task.add_task_by_settings('bloop', 'boopsblend', [10, 500, 1], [1024, 2048], 'CYCLES', 'view_layer', 'all', 50)
     # task.add_task_by_settings('test2', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
     # task.add_task_by_settings('test3', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)
     # task.add_task_by_settings('test4', 'anotherone', [1, 250, 1], [1920, 1024], 'CYCLES', 'view_layer', 'all', 10)

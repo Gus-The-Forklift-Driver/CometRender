@@ -1,8 +1,10 @@
-from re import T
+
 import dearpygui.dearpygui as dpg
 from client_boilerplate import client as bpclient
+import utils
 
-client = bpclient('manager', apiKey='', adress='http://127.0.0.1:8000')
+config = utils.load_config()
+client = bpclient('manager', apiKey=config['server']['key'], adress=config['server']['ip'])
 
 dpg.create_context()
 dpg.create_viewport(title=' ', width=600, height=600)
@@ -64,7 +66,7 @@ with dpg.window(tag='main'):
             dpg.add_separator()
             dpg.add_input_text(label='Task name')
             dpg.add_input_text(label='Blend file')
-            dpg.add_input_text(label='View layer')
+            dpg.add_input_text(label='scene')
             with dpg.group(horizontal=True,):
                 dpg.add_input_int(width=120)
                 dpg.add_input_int(width=120)
