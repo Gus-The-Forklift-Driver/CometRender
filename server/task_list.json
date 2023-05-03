@@ -1,262 +1,82 @@
 [
     {
-        "uuid": "96a4f353-d23d-46ce-8b44-839c1a9709b4",
-        "name": "bloop",
-        "blend_file": "boopsblend",
-        "render_size": [
-            1024,
-            2048
-        ],
+        "uuid": "03cc68e3-85ac-42b8-ae97-af319fe3e98c",
+        "name": "main_scene",
+        "blend_file": "test_blend",
+        "resolution_x": 1920,
+        "resolution_y": 1080,
         "render_engine": "CYCLES",
-        "view_layer": "view_layer",
+        "scene": "main",
         "frame_step": 1,
-        "output_path": "./",
-        "errors": [],
-        "chunks": [
-            [
-                [
-                    10,
-                    60
-                ],
-                "done"
-            ],
-            [
-                [
-                    61,
-                    111
-                ],
-                "running"
-            ],
-            [
-                [
-                    112,
-                    162
-                ],
-                "error"
-            ],
-            [
-                [
-                    163,
-                    213
-                ],
-                "todo"
-            ],
-            [
-                [
-                    214,
-                    264
-                ],
-                "todo"
-            ],
-            [
-                [
-                    265,
-                    315
-                ],
-                "todo"
-            ],
-            [
-                [
-                    316,
-                    366
-                ],
-                "todo"
-            ],
-            [
-                [
-                    367,
-                    417
-                ],
-                "todo"
-            ],
-            [
-                [
-                    418,
-                    500
-                ],
-                "todo"
-            ],
-            [
-                [
-                    469,
-                    500
-                ],
-                "todo"
-            ]
-        ]
-    },
-    {
-        "uuid": "1f57b92e-e8a9-4589-b615-d2f43a612825",
-        "name": "test2",
-        "blend_file": "anotherone",
-        "render_size": [
-            1920,
-            1024
-        ],
-        "render_engine": "CYCLES",
-        "view_layer": "view_layer",
-        "passes": "all",
-        "frame_step": 1,
-        "output_path": "./",
+        "output_path": "//frame_####",
         "errors": [],
         "chunks": [
             [
                 [
                     1,
-                    11
+                    26
                 ],
                 "todo"
             ],
             [
                 [
-                    12,
-                    22
+                    27,
+                    52
                 ],
                 "todo"
             ],
             [
                 [
-                    23,
-                    33
+                    53,
+                    78
                 ],
                 "todo"
             ],
             [
                 [
-                    34,
-                    44
+                    79,
+                    104
                 ],
                 "todo"
             ],
             [
                 [
-                    45,
-                    55
+                    105,
+                    130
                 ],
                 "todo"
             ],
             [
                 [
-                    56,
-                    66
+                    131,
+                    156
                 ],
                 "todo"
             ],
             [
                 [
-                    67,
-                    77
+                    157,
+                    182
                 ],
                 "todo"
             ],
             [
                 [
-                    78,
-                    88
+                    183,
+                    208
                 ],
                 "todo"
             ],
             [
                 [
-                    89,
-                    99
-                ],
-                "todo"
-            ],
-            [
-                [
-                    100,
-                    110
-                ],
-                "todo"
-            ],
-            [
-                [
-                    111,
-                    121
-                ],
-                "todo"
-            ],
-            [
-                [
-                    122,
-                    132
-                ],
-                "todo"
-            ],
-            [
-                [
-                    133,
-                    143
-                ],
-                "todo"
-            ],
-            [
-                [
-                    144,
-                    154
-                ],
-                "todo"
-            ],
-            [
-                [
-                    155,
-                    165
-                ],
-                "todo"
-            ],
-            [
-                [
-                    166,
-                    176
-                ],
-                "todo"
-            ],
-            [
-                [
-                    177,
-                    187
-                ],
-                "todo"
-            ],
-            [
-                [
-                    188,
-                    198
-                ],
-                "todo"
-            ],
-            [
-                [
-                    199,
-                    209
-                ],
-                "todo"
-            ],
-            [
-                [
-                    210,
-                    220
-                ],
-                "todo"
-            ],
-            [
-                [
-                    221,
-                    231
-                ],
-                "todo"
-            ],
-            [
-                [
-                    232,
+                    209,
                     250
                 ],
                 "todo"
             ],
             [
                 [
-                    243,
+                    235,
                     250
                 ],
                 "todo"
@@ -264,177 +84,34 @@
         ]
     },
     {
-        "uuid": "2ddf16c2-1666-444b-8201-b7642616dffc",
-        "name": "test3",
-        "blend_file": "anotherone",
-        "render_size": [
-            1920,
-            1024
-        ],
-        "render_engine": "CYCLES",
-        "view_layer": "view_layer",
-        "passes": "all",
+        "uuid": "689a0105-17d3-426d-b722-2bb57e5aec14",
+        "name": "environment",
+        "blend_file": "test_blend",
+        "resolution_x": 1920,
+        "resolution_y": 1080,
+        "render_engine": "BLENDER_EEVEE",
+        "scene": "characters",
         "frame_step": 1,
-        "output_path": "./",
+        "output_path": "//frame_####",
         "errors": [],
         "chunks": [
             [
                 [
                     1,
-                    11
+                    101
                 ],
                 "todo"
             ],
             [
                 [
-                    12,
-                    22
-                ],
-                "todo"
-            ],
-            [
-                [
-                    23,
-                    33
-                ],
-                "todo"
-            ],
-            [
-                [
-                    34,
-                    44
-                ],
-                "todo"
-            ],
-            [
-                [
-                    45,
-                    55
-                ],
-                "todo"
-            ],
-            [
-                [
-                    56,
-                    66
-                ],
-                "todo"
-            ],
-            [
-                [
-                    67,
-                    77
-                ],
-                "todo"
-            ],
-            [
-                [
-                    78,
-                    88
-                ],
-                "todo"
-            ],
-            [
-                [
-                    89,
-                    99
-                ],
-                "todo"
-            ],
-            [
-                [
-                    100,
-                    110
-                ],
-                "todo"
-            ],
-            [
-                [
-                    111,
-                    121
-                ],
-                "todo"
-            ],
-            [
-                [
-                    122,
-                    132
-                ],
-                "todo"
-            ],
-            [
-                [
-                    133,
-                    143
-                ],
-                "todo"
-            ],
-            [
-                [
-                    144,
-                    154
-                ],
-                "todo"
-            ],
-            [
-                [
-                    155,
-                    165
-                ],
-                "todo"
-            ],
-            [
-                [
-                    166,
-                    176
-                ],
-                "todo"
-            ],
-            [
-                [
-                    177,
-                    187
-                ],
-                "todo"
-            ],
-            [
-                [
-                    188,
-                    198
-                ],
-                "todo"
-            ],
-            [
-                [
-                    199,
-                    209
-                ],
-                "todo"
-            ],
-            [
-                [
-                    210,
-                    220
-                ],
-                "todo"
-            ],
-            [
-                [
-                    221,
-                    231
-                ],
-                "todo"
-            ],
-            [
-                [
-                    232,
+                    102,
                     250
                 ],
                 "todo"
             ],
             [
                 [
-                    243,
+                    203,
                     250
                 ],
                 "todo"
@@ -442,359 +119,22 @@
         ]
     },
     {
-        "uuid": "9608701c-15bf-48e4-871d-5a0ee5eb0197",
-        "name": "test4",
-        "blend_file": "anotherone",
-        "render_size": [
-            1920,
-            1024
-        ],
-        "render_engine": "CYCLES",
-        "view_layer": "view_layer",
-        "passes": "all",
+        "uuid": "19d1a050-8845-4809-9597-5bac1653c027",
+        "name": "playblast",
+        "blend_file": "test_blend",
+        "resolution_x": 1920,
+        "resolution_y": 1080,
+        "render_engine": "BLENDER_WORKBENCH",
+        "scene": "main",
         "frame_step": 1,
-        "output_path": "./",
+        "output_path": "//frame_####",
         "errors": [],
         "chunks": [
             [
-                [
-                    1,
-                    11
-                ],
-                "todo"
+                1,
+                250
             ],
-            [
-                [
-                    12,
-                    22
-                ],
-                "todo"
-            ],
-            [
-                [
-                    23,
-                    33
-                ],
-                "todo"
-            ],
-            [
-                [
-                    34,
-                    44
-                ],
-                "todo"
-            ],
-            [
-                [
-                    45,
-                    55
-                ],
-                "todo"
-            ],
-            [
-                [
-                    56,
-                    66
-                ],
-                "todo"
-            ],
-            [
-                [
-                    67,
-                    77
-                ],
-                "todo"
-            ],
-            [
-                [
-                    78,
-                    88
-                ],
-                "todo"
-            ],
-            [
-                [
-                    89,
-                    99
-                ],
-                "todo"
-            ],
-            [
-                [
-                    100,
-                    110
-                ],
-                "todo"
-            ],
-            [
-                [
-                    111,
-                    121
-                ],
-                "todo"
-            ],
-            [
-                [
-                    122,
-                    132
-                ],
-                "todo"
-            ],
-            [
-                [
-                    133,
-                    143
-                ],
-                "todo"
-            ],
-            [
-                [
-                    144,
-                    154
-                ],
-                "todo"
-            ],
-            [
-                [
-                    155,
-                    165
-                ],
-                "todo"
-            ],
-            [
-                [
-                    166,
-                    176
-                ],
-                "todo"
-            ],
-            [
-                [
-                    177,
-                    187
-                ],
-                "todo"
-            ],
-            [
-                [
-                    188,
-                    198
-                ],
-                "todo"
-            ],
-            [
-                [
-                    199,
-                    209
-                ],
-                "todo"
-            ],
-            [
-                [
-                    210,
-                    220
-                ],
-                "todo"
-            ],
-            [
-                [
-                    221,
-                    231
-                ],
-                "todo"
-            ],
-            [
-                [
-                    232,
-                    250
-                ],
-                "todo"
-            ],
-            [
-                [
-                    243,
-                    250
-                ],
-                "todo"
-            ]
-        ]
-    },
-    {
-        "uuid": "051b51a0-1c43-4102-9982-746e2c8e48e1",
-        "name": "test5",
-        "blend_file": "anotherone",
-        "render_size": [
-            1920,
-            1024
-        ],
-        "render_engine": "CYCLES",
-        "view_layer": "view_layer",
-        "passes": "all",
-        "frame_step": 1,
-        "output_path": "./",
-        "errors": [],
-        "chunks": [
-            [
-                [
-                    1,
-                    11
-                ],
-                "todo"
-            ],
-            [
-                [
-                    12,
-                    22
-                ],
-                "todo"
-            ],
-            [
-                [
-                    23,
-                    33
-                ],
-                "todo"
-            ],
-            [
-                [
-                    34,
-                    44
-                ],
-                "todo"
-            ],
-            [
-                [
-                    45,
-                    55
-                ],
-                "todo"
-            ],
-            [
-                [
-                    56,
-                    66
-                ],
-                "todo"
-            ],
-            [
-                [
-                    67,
-                    77
-                ],
-                "todo"
-            ],
-            [
-                [
-                    78,
-                    88
-                ],
-                "todo"
-            ],
-            [
-                [
-                    89,
-                    99
-                ],
-                "todo"
-            ],
-            [
-                [
-                    100,
-                    110
-                ],
-                "todo"
-            ],
-            [
-                [
-                    111,
-                    121
-                ],
-                "todo"
-            ],
-            [
-                [
-                    122,
-                    132
-                ],
-                "todo"
-            ],
-            [
-                [
-                    133,
-                    143
-                ],
-                "todo"
-            ],
-            [
-                [
-                    144,
-                    154
-                ],
-                "todo"
-            ],
-            [
-                [
-                    155,
-                    165
-                ],
-                "todo"
-            ],
-            [
-                [
-                    166,
-                    176
-                ],
-                "todo"
-            ],
-            [
-                [
-                    177,
-                    187
-                ],
-                "todo"
-            ],
-            [
-                [
-                    188,
-                    198
-                ],
-                "todo"
-            ],
-            [
-                [
-                    199,
-                    209
-                ],
-                "todo"
-            ],
-            [
-                [
-                    210,
-                    220
-                ],
-                "todo"
-            ],
-            [
-                [
-                    221,
-                    231
-                ],
-                "todo"
-            ],
-            [
-                [
-                    232,
-                    250
-                ],
-                "todo"
-            ],
-            [
-                [
-                    243,
-                    250
-                ],
-                "todo"
-            ]
+            "todo"
         ]
     }
 ]

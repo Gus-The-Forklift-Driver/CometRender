@@ -1,11 +1,7 @@
 # https://fastapi.tiangolo.com/tutorial/path-params/
-from email.policy import default
-import json
-from pickle import TRUE
-
-from fastapi import Body, FastAPI, Header, Query
+import os
+from fastapi import Body, FastAPI, Header
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 import utils
 import task_manager
 
@@ -27,7 +23,10 @@ app.add_middleware(
 
 
 task_manager = task_manager.TaskManager()
-task_manager.load_tasks_from_file()
+if os.path.exists('./current_status.json'):
+    task_manager.load_tasks_from_file('./current_status.json')
+else:
+    task_manager.load_tasks_from_file()
 
 
 @app.get("/")
@@ -38,6 +37,7 @@ async def root():
 @app.get("/ping")
 async def ping():
     return 'pong'
+
 
 @app.get("/check_login")
 def check_login(key: str | None = Header(default=None)):
@@ -71,7 +71,7 @@ async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(def
 @app.post('/new_task')
 def add_task(data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
-        task_manager.add_task_by_dict(data)
+        task_manager.add_task_by_settings(data)
     else:
         return "Invalid auth"
 

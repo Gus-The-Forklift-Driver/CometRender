@@ -119,42 +119,39 @@ class TaskManager():
             tasks_names.append(task["name"])
         return tasks_names
 
-    def add_task_by_dict(self, task_info: dict):
-        try:
-            self.tasks.append(task_info)
-            logging.info(f'Added task named : {task_info["name"]}')
-            return 0
-        except Exception as e:
-            logging.error('Failed to add task', exc_info=True)
-            return None
-
-    def add_task_by_settings(self, task_name, blend_file, frame_start, frame_end, resolution_x, resolution_y, render_engine, scene, chunks_size):
+    def add_task_by_settings(self, task_settings):
         task_uuid = str(uuid.uuid4())
         chunks = []
-        if chunks_size == -1:
-            chunks = {(frame_start, frame_end): 'TODO'}
+        if task_settings['chunks_size'] == -1:
+            chunks = [(task_settings['frame_start'], task_settings['frame_end']), 'todo']
         else:
             # creates chunks from settings
             # this does not take into account for the frame step
-            for x in range(frame_start, frame_end, chunks_size+1):
+            for x in range(task_settings['frame_start'], task_settings['frame_end'], task_settings['chunks_size']+1):
                 a = x
-                b = x + chunks_size
-                if frame_end-chunks_size < b:
-                    b = frame_end
+                b = x + task_settings['chunks_size']
+                if task_settings['frame_end']-task_settings['chunks_size'] < b:
+                    b = task_settings['frame_end']
                 chunks.append([(a, b), 'todo'])
-
-        self.add_task_by_dict({
-            "uuid": task_uuid,
-            "name": task_name,
-            "blend_file": blend_file,
-            "resolution_x": resolution_x,
-            "resolution_y": resolution_y,
-            "render_engine": render_engine,
-            "scene": scene,
-            "frame_step": 1,
-            "output_path": "//frame_####",
-            "errors": [],
-            "chunks": chunks, })
+            # add task to task list
+            try:
+                self.tasks.append({
+                    "uuid": task_uuid,
+                    "name": task_settings['task_name'],
+                    "blend_file": task_settings['blend_file'],
+                    "resolution_x": task_settings['resolution_x'],
+                    "resolution_y": task_settings['resolution_y'],
+                    "render_engine": task_settings['render_engine'],
+                    "scene": task_settings['scene'],
+                    "frame_step": task_settings['frame_step'],
+                    "output_path": task_settings['output_path'],
+                    "errors": [],
+                    "chunks": chunks, })
+                logging.info(f'Added task named : {task_settings["task_name"]}')
+                return 0
+            except Exception as e:
+                logging.error('Failed to add task', exc_info=True)
+                return None
 
     def print_current_status(self):
         display = copy.deepcopy(self.tasks)
@@ -218,16 +215,18 @@ if __name__ == '__main__':
     # just run some tests
     task = TaskManager()
 
-    task.add_task_by_settings('bloop', 'boopsblend', 1, 250, 1920, 1080, 'CYCLES', 'main', 50)
+    task.add_task_by_settings('main_scene', 'test_blend', 1, 250, 1920, 1080, 'CYCLES', 'main', 25)
+    task.add_task_by_settings('environment', 'test_blend', 1, 250, 1920, 1080, 'BLENDER_EEVEE', 'characters', 100)
+    task.add_task_by_settings('playblast', 'test_blend', 1, 250, 1920, 1080, 'BLENDER_WORKBENCH', 'main', -1)
 
     # task.get_next_task()
-    task.save_tasks_to_file()
+    task.save_tasks_to_file('./task_list')
 
     # task.change_chunk_status('96a4f353-d23d-46ce-8b44-839c1a9709b4', [10, 60], 'done')
 
     # task.move_task('860dd42e-b012-416f-8a46-965132c40bcf', 10)
 
     # print(task.get_tasks_names())
-    task.save_tasks_to_file()
+    # task.save_tasks_to_file()
     # task.save_tasks_to_file('./task_list.json')
     logging.info('===DONE===')

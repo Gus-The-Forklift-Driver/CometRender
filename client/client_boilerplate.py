@@ -5,7 +5,7 @@ from retry import retry
 
 
 class client():
-    def __init__(self, name: str, apiKey: str, adress: str = 'http://127.0.0.1'):
+    def __init__(self, name: str, apiKey: str, adress: str = 'http://127.0.0.1:8000'):
         self.apiKey = apiKey
         self.adress = adress
         self.name = name
@@ -42,8 +42,7 @@ class client():
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def get_task_list(self):
-        return requests.get(url=f'{self.adress}/task_list',
-                            headers={'key': self.apiKey}).json()
+        return requests.get(url=f'{self.adress}/task_list', headers={'key': self.apiKey}).json()
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def get_workers(self):
@@ -56,5 +55,6 @@ class client():
                             headers={'key': self.apiKey}).json()
 
     def post_task(self, task):
-        return requests.get(url=f'{self.adress}/task_status',
-                            headers={'key': self.apiKey}).json()
+        return requests.post(url=f'{self.adress}/new_task',
+                             headers={'key': self.apiKey},
+                             json=task)
