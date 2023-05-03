@@ -4,7 +4,7 @@
 
 wip
 
-## Dependecies
+## Dependecies for the server
  - python 3.10.+
  - coloredLogs
  - (tabulate)
