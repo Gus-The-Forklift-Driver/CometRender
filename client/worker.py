@@ -7,8 +7,9 @@ import utils
 import bpy
 import coloredlogs
 from client_boilerplate import client as bpclient
-import platform
 
+task = None
+chunk = None
 
 # coloredlogs.install(level=logging.DEBUG)
 coloredlogs.install(level=logging.INFO)
@@ -29,7 +30,6 @@ bpy.app.binary_path = config['worker']["blender_bin"]
 
 
 def main():
-    global task
     sleep_times = [5, 10, 15]
     sleep_iteration = 0
     while True:
@@ -63,34 +63,34 @@ def main():
                     bpy.ops.wm.open_mainfile(filepath=blend_file_path)
                 except Exception as e:
                     logging.error('Problem with loading .blend file', exc_info=True)
-                    client.post_error(task['uuid'], 'pb_blendfile', str(e))
+                    client.post_error('pb_blendfile', str(e), task['uuid'])
                 else:
                     missing_files = utils.check_external_files()
                     if len(missing_files) > 0:
                         logging.error(f'Missing external files : ')
                         for file in missing_files:
                             logging.error(file)
-                        client.post_error(task['uuid'], 'pb_settings', missing_files)
+                        client.post_error('pb_settings', missing_files, task['uuid'])
 
                     try:
                         utils.set_settings(task, chunk)
 
                     except Exception as e:
                         logging.error('Problem with task settings', exc_info=True)
-                        client.post_error(task['uuid'], 'pb_settings', str(e))
+                        client.post_error('pb_settings', str(e), task['uuid'])
                     else:
                         try:
-                            bpy.ops.render.render(animation=True)
+                            bpy.ops.render.render(animation=True, scene=task['scene'])
                         except Exception as e:
                             logging.error('Problem with render', exc_info=True)
-                            client.post_error(task['uuid'], 'pb_render', str(e))
+                            client.post_error('pb_render', str(e), task['uuid'], chunk)
                         else:
                             client.post_progress(task_uuid=task['uuid'], chunk=chunk, status="chunks_done")
             else:
                 logging.error(f"File doesn't exist : '{config['worker']['working_dir']}{task_blend_file}.blend'")
                 logging.info(f"file should be here {config['worker']['working_dir']}{task_blend_file}.blend")
-                client.post_error(task['uuid'], 'pb_blendfile_missing',
-                                  f'Looked in {config["worker"]["working_dir"]}')
+                client.post_error('pb_blendfile_missing',
+                                  f'Looked in {config["worker"]["working_dir"]}', task['uuid'])
 
         task = None
         chunk = None
@@ -100,10 +100,11 @@ def signal_term_handler(signal, frame):
     logging.info('Recieved sigterm')
     if task != None:
         logging.info('Posting status')
-        client.post_error(task['uuid'], 'pb_canceled', 'canceled by user')
+        client.post_error('pb_canceled', 'canceled by user', task['uuid'], chunk)
 
 
 if __name__ == '__main__':
+
     signal.signal(signal.SIGTERM, signal_term_handler)
     try:
         main()
@@ -113,4 +114,4 @@ if __name__ == '__main__':
         logging.critical('', exc_info=True)
     if task != None:
         logging.info('Posting status')
-        client.post_error(task['uuid'], 'pb_canceled', 'canceled by user')
+        client.post_error('pb_canceled', 'canceled by user', task['uuid'], chunk)

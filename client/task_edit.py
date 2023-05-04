@@ -57,7 +57,7 @@ def upload_task():
             'frame_step': dpg.get_value('frame_step'),
             'chunks_size': dpg.get_value('chunks_size')
             }
-    client.post_task(task)
+    print(client.post_task(task))
 
 
 with dpg.window(tag='main'):
@@ -124,7 +124,8 @@ with dpg.window(tag='main'):
                             else:
                                 dpg.bind_item_theme(dpg.last_item(), 'error')
 
-                dpg.add_separator()
+            dpg.add_separator()
+            dpg.add_text('Workers')
             workers = client.get_workers()
             dpg.add_text(workers)
 

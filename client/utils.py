@@ -66,8 +66,8 @@ def save_config(config, file='./config.yml'):
 
 def set_settings(settings, chunk):
     # set the scene
-    bpy.context.scene = settings['scene']
-    current_scene = bpy.context.scene
+    # bpy.context.scene = settings['scene']
+    current_scene = bpy.data.scenes[settings['scene']]
     # set the settings
     current_scene.render.resolution_x = settings['resolution_x']
     current_scene.render.resolution_y = settings['resolution_y']

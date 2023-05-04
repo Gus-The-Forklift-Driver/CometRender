@@ -5,14 +5,12 @@ from os import path
 
 
 def verify_key(key: str):
-    return key == "CHANGEME"
-    # f = open('./apiKeys', 'r')
-    # for line in f:
-    #     if key == line.strip('\n'):
-    #         f.close
-    #         return True
-    # return False
-    return True
+    f = open('./apiKeys', 'r')
+    for line in f:
+        if key == line.strip('\n'):
+            f.close
+            return True
+    return False
 
 
 def notify_status(title: str, message: str = None):

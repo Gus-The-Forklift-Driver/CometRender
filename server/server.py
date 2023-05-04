@@ -1,6 +1,6 @@
 # https://fastapi.tiangolo.com/tutorial/path-params/
 import os
-from fastapi import Body, FastAPI, Header
+from fastapi import Body, FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 import utils
 import task_manager
@@ -23,10 +23,13 @@ app.add_middleware(
 
 
 task_manager = task_manager.TaskManager()
-if os.path.exists('./current_status.json'):
-    task_manager.load_tasks_from_file('./current_status.json')
-else:
-    task_manager.load_tasks_from_file()
+
+# if os.path.exists('./current_status.json'):
+#     task_manager.load_tasks_from_file('./current_status.json')
+# else:
+#     task_manager.load_tasks_from_file('./task_list.json')
+
+task_manager.load_tasks_from_file('./task_list.json')
 
 
 @app.get("/")
@@ -41,16 +44,20 @@ async def ping():
 
 @app.get("/check_login")
 def check_login(key: str | None = Header(default=None)):
-    return utils.verify_key(key)
+    if utils.verify_key(key):
+        return key
 
 
 @app.get('/next_task')
-def next_task(key: str | None = Header(default=None)):
+def next_task(key: str | None = Header(default=None), workername: str | None = Header(default=None)):
     if utils.verify_key(key):
-        next_task, chunk = task_manager.get_next_task()
+        task_manager.add_worker(workername)
+        next_task, chunk = task_manager.get_next_task(workername)
         if next_task != None:
             task_manager.save_tasks_to_file()
         return next_task, chunk
+    else:
+        raise HTTPException(status_code=400, detail="Bad request")
 
 
 @app.post('/progress/{task_uuid}')
@@ -65,6 +72,7 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, wor
 async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.log_error(task_uuid, data)
+        task_manager.save_tasks_to_file()
         return
 
 
@@ -72,8 +80,9 @@ async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(def
 def add_task(data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.add_task_by_settings(data)
+        task_manager.save_tasks_to_file()
     else:
-        return "Invalid auth"
+        raise HTTPException(status_code=400, detail="Bad request")
 
 
 @app.get('/task_list')

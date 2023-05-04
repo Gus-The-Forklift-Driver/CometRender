@@ -17,7 +17,7 @@ class client():
             headers={'key': self.apiKey})
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
-    def post_error(self, task_uuid, chunk, error_type, error_info):
+    def post_error(self,  error_type, error_info, task_uuid, chunk=None):
         error_msg = {
             'worker_name': self.name,
             'time': str(time.time()),
@@ -33,8 +33,11 @@ class client():
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def get_next_task(self):
-        return requests.get(url=f'{self.adress}/next_task',
-                            headers={'key': self.apiKey}).json()
+        result = requests.get(url=f'{self.adress}/next_task',
+                                  headers={'key': self.apiKey,
+                                           'workername': self.name})
+        result.raise_for_status()
+        return result.json()
 
     @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def ping(self):

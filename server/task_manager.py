@@ -102,15 +102,22 @@ class TaskManager():
             logging.error('Failed to save tasks', exc_info=True)
             return None
 
-    def get_next_task(self):
+    def get_next_task(self, worker_name):
         for task in self.tasks:
+            dirty = False
+            for error in task['errors']:
+                if error['worker_name'] == worker_name:
+                    dirty = True
+            if dirty:
+                continue
             for chunk in task['chunks']:
                 if chunk[1] == 'todo':
                     chunk[1] = 'running'
-                    logging.info(f'Sending task named : {task["name"]} | {chunk[0]}')
+                    logging.info(f'Sending task named : {task["name"]} | {chunk[0]} to {worker_name}')
                     return task, chunk[0]
+
         # no valid tasks have been found
-        logging.info('No task to send')
+        logging.info(f'No task to send for {worker_name}')
         return None, None
 
     def get_tasks_names(self):
@@ -123,7 +130,7 @@ class TaskManager():
         task_uuid = str(uuid.uuid4())
         chunks = []
         if task_settings['chunks_size'] == -1:
-            chunks = [(task_settings['frame_start'], task_settings['frame_end']), 'todo']
+            chunks.append([(task_settings['frame_start'], task_settings['frame_end']), 'todo'])
         else:
             # creates chunks from settings
             # this does not take into account for the frame step
@@ -133,25 +140,26 @@ class TaskManager():
                 if task_settings['frame_end']-task_settings['chunks_size'] < b:
                     b = task_settings['frame_end']
                 chunks.append([(a, b), 'todo'])
-            # add task to task list
-            try:
-                self.tasks.append({
-                    "uuid": task_uuid,
-                    "name": task_settings['task_name'],
-                    "blend_file": task_settings['blend_file'],
-                    "resolution_x": task_settings['resolution_x'],
-                    "resolution_y": task_settings['resolution_y'],
-                    "render_engine": task_settings['render_engine'],
-                    "scene": task_settings['scene'],
-                    "frame_step": task_settings['frame_step'],
-                    "output_path": task_settings['output_path'],
-                    "errors": [],
-                    "chunks": chunks, })
-                logging.info(f'Added task named : {task_settings["task_name"]}')
-                return 0
-            except Exception as e:
-                logging.error('Failed to add task', exc_info=True)
-                return None
+
+        # add task to task list
+        try:
+            self.tasks.append({
+                "uuid": task_uuid,
+                "name": task_settings['task_name'],
+                "blend_file": task_settings['blend_file'],
+                "resolution_x": task_settings['resolution_x'],
+                "resolution_y": task_settings['resolution_y'],
+                "render_engine": task_settings['render_engine'],
+                "scene": task_settings['scene'],
+                "frame_step": task_settings['frame_step'],
+                "output_path": task_settings['output_path'],
+                "errors": [],
+                "chunks": chunks, })
+            logging.info(f'Added task named : {task_settings["task_name"]}')
+            return 0
+        except Exception as e:
+            logging.error('Failed to add task', exc_info=True)
+            return None
 
     def print_current_status(self):
         display = copy.deepcopy(self.tasks)
@@ -164,7 +172,6 @@ class TaskManager():
     def change_chunk_status(self, uuid, chunk_in, status):
         for task in self.tasks:
             if task['uuid'] == uuid:
-                print(task)
                 for chunk in task['chunks']:
                     if chunk[0] == chunk_in:
                         chunk[1] = status
@@ -176,7 +183,6 @@ class TaskManager():
         return
 
     def log_error(self, task_uuid, data):
-
         for task_id in range(len(self.tasks)):
             if self.tasks[task_id]['uuid'] == task_uuid:
                 self.tasks[task_id]['errors'].append(data)
@@ -215,12 +221,45 @@ if __name__ == '__main__':
     # just run some tests
     task = TaskManager()
 
-    task.add_task_by_settings('main_scene', 'test_blend', 1, 250, 1920, 1080, 'CYCLES', 'main', 25)
-    task.add_task_by_settings('environment', 'test_blend', 1, 250, 1920, 1080, 'BLENDER_EEVEE', 'characters', 100)
-    task.add_task_by_settings('playblast', 'test_blend', 1, 250, 1920, 1080, 'BLENDER_WORKBENCH', 'main', -1)
+    task.add_task_by_settings({'task_name': 'main',
+                               'blend_file': 'test_blend',
+                               'resolution_x': 1920,
+                               'resolution_y': 1080,
+                               'render_engine': 'BLENDER_EEVEE',
+                               'scene': 'main',
+                               'output_path': '//frame_####',
+                               'frame_start': 1,
+                               'frame_end': 250,
+                               'frame_step': 1,
+                               'chunks_size': 50,
+                               })
+    task.add_task_by_settings({'task_name': 'enviro',
+                               'blend_file': 'test_blend',
+                               'resolution_x': 1920,
+                               'resolution_y': 1080,
+                               'render_engine': 'CYCLES',
+                               'scene': 'env',
+                               'output_path': '//frame_####',
+                               'frame_start': 1,
+                               'frame_end': 250,
+                               'frame_step': 1,
+                               'chunks_size': 25,
+                               })
+    task.add_task_by_settings({'task_name': 'playblast',
+                               'blend_file': 'test_blend',
+                               'resolution_x': 1920,
+                               'resolution_y': 1080,
+                               'render_engine': 'BLENDER_WORKBENCH',
+                               'scene': 'main',
+                               'output_path': '//frame_####',
+                               'frame_start': 1,
+                               'frame_end': 250,
+                               'frame_step': 1,
+                               'chunks_size': -1,
+                               })
 
     # task.get_next_task()
-    task.save_tasks_to_file('./task_list')
+    task.save_tasks_to_file('./task_list.json')
 
     # task.change_chunk_status('96a4f353-d23d-46ce-8b44-839c1a9709b4', [10, 60], 'done')
 
