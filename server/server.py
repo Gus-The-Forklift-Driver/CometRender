@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import utils
 import task_manager
 
+data_folder = 'D:/OneDrive - Groupe E.D.H/CometTest/'
+
 app = FastAPI(docs_url=None, redoc_url=None)
 
 origins = [
@@ -35,6 +37,11 @@ task_manager.load_tasks_from_file('./task_list.json')
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
+
+@app.get('/files/{file_path:path}')
+async def read_file(file_path: str):
+    return data_folder + file_path
 
 
 @app.get("/ping")
