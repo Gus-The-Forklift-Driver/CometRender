@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import sys
 from time import sleep
 import utils
 import bpy
@@ -11,7 +12,20 @@ task = None
 chunk = None
 
 # coloredlogs.install(level=logging.DEBUG)
-coloredlogs.install(level=logging.INFO)
+# coloredlogs.install(level=logging.INFO)
+logFormatter = logging.Formatter("%(asctime)s [%(levelname)s] : %(message)s")
+coloredLogFormatter = logging.Formatter("\033[1;32m%(asctime)s \033[1;34m[%(levelname)s] \033[0m %(message)s")
+rootLogger = logging.getLogger()
+rootLogger.setLevel(logging.INFO)
+
+fileHandler = logging.FileHandler("{0}/{1}".format('./', 'log'))
+fileHandler.setFormatter(logFormatter)
+rootLogger.addHandler(fileHandler)
+consoleHandler = logging.StreamHandler(sys.stdout)
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(coloredLogFormatter)
+rootLogger.addHandler(consoleHandler)
+
 
 # load worker config
 try:
@@ -32,7 +46,7 @@ def main():
     sleep_times = [5, 10, 15]
     sleep_iteration = 0
     while True:
-        try :
+        try:
             # get the next task
             task, chunk = client.get_next_task()
 
@@ -70,7 +84,7 @@ def main():
                     else:
                         logging.info(f'downloading file : {file}')
                         client.get_file(file, config['worker']['working_dir'])
-        except :
+        except:
             print('an unknown error occured')
         logging.info('done')
         break
