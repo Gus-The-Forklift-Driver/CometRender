@@ -1,6 +1,7 @@
 # https://fastapi.tiangolo.com/tutorial/path-params/
 import os
 from fastapi import Body, FastAPI, HTTPException, Header
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import utils
 import task_manager
@@ -40,22 +41,28 @@ async def root():
 
 
 @app.get('/files/{file_path:path}')
-async def read_file(file_path: str):
-    return data_folder + file_path
+async def read_file(file_path: str, key: str | None = Header(default=None)):
+    if utils.verify_key(key):
+        if os.path.isfile(data_folder + file_path):
+            return FileResponse(data_folder + file_path)
+        else:
+            raise HTTPException(status_code=404, detail="File does not exist")
+    else:
+        raise HTTPException(status_code=400, detail="Bad request")
 
 
-@app.get("/ping")
+@ app.get("/ping")
 async def ping():
     return 'pong'
 
 
-@app.get("/check_login")
+@ app.get("/check_login")
 def check_login(key: str | None = Header(default=None)):
     if utils.verify_key(key):
         return key
 
 
-@app.get('/next_task')
+@ app.get('/next_task')
 def next_task(key: str | None = Header(default=None), workername: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.add_worker(workername)
@@ -67,7 +74,7 @@ def next_task(key: str | None = Header(default=None), workername: str | None = H
         raise HTTPException(status_code=400, detail="Bad request")
 
 
-@app.post('/progress/{task_uuid}')
+@ app.post('/progress/{task_uuid}')
 def update_progress(task_uuid: str, chunk: str | float, status: str | float, worker_name: str, key: str | None = Header(default=None)):
     if utils.verify_key(key):
         chunk = list(eval(chunk))
@@ -75,7 +82,7 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, wor
         task_manager.add_worker(worker_name)
 
 
-@app.post('/error/{task_uuid}')
+@ app.post('/error/{task_uuid}')
 async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.log_error(task_uuid, data)
@@ -83,7 +90,7 @@ async def add_error(*, task_uuid: str, data=Body(), key: str | None = Header(def
         return
 
 
-@app.post('/new_task')
+@ app.post('/new_task')
 def add_task(data=Body(), key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.add_task_by_settings(data)
@@ -92,31 +99,41 @@ def add_task(data=Body(), key: str | None = Header(default=None)):
         raise HTTPException(status_code=400, detail="Bad request")
 
 
-@app.get('/task_list')
+@ app.get('/task_list')
 async def task_list():
     return task_manager.tasks
 
 
-@app.get('/task_names')
+@ app.get('/task_names')
 async def task_list():
     return task_manager.get_tasks_names()
 
 
-@app.get('/workers')
+@ app.get('/workers')
 async def workers():
     return task_manager.workers
 
 
-@app.post('/move_task/{task_uuid}')
+@ app.post('/move_task/{task_uuid}')
 def move_task(task_uuid: str, offset: int, key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.move_task(task_uuid, offset)
     return
 
 
-@app.get('task_status')
+@ app.get('/task_status')
 async def task_status():
     return task_manager.get_task_status()
+
+
+@ app.post('/delete_task/{task_uuid}')
+def delete_task(task_uuid: str, key: str | None = Header(default=None)):
+    if utils.verify_key(key):
+        task_manager.delete_task(task_uuid)
+        task_manager.save_tasks_to_file()
+    else:
+        raise HTTPException(status_code=400, detail="Bad request")
+
 
 if __name__ == '__main__':
     import uvicorn

@@ -204,8 +204,8 @@ class TaskManager():
     def delete_task(self, task_uuid: str):
         for task_id in range(len(self.tasks)):
             if self.tasks[task_id]['uuid'] == task_uuid:
+                logging.info(f'Deleting task {self.tasks[task_id]["name"]}')
                 self.tasks.pop(task_id)
-                logging.info(f'Deleted task {self.tasks[task_id]["name"]}')
                 return
         logging.error(f'Failed to delete task with : {task_uuid} uuid')
 
@@ -221,42 +221,42 @@ if __name__ == '__main__':
     # just run some tests
     task = TaskManager()
 
-    task.add_task_by_settings({'task_name': 'main',
-                               'blend_file': 'test_blend',
+    task.add_task_by_settings({'task_name': 'test',
+                               'blend_file': 'sequence_1/render.blend',
                                'resolution_x': 1920,
                                'resolution_y': 1080,
                                'render_engine': 'BLENDER_EEVEE',
                                'scene': 'main',
-                               'output_path': '//frame_####',
+                               'output_path': '//output/frame_####',
                                'frame_start': 1,
                                'frame_end': 250,
                                'frame_step': 1,
                                'chunks_size': 50,
                                })
-    task.add_task_by_settings({'task_name': 'enviro',
-                               'blend_file': 'test_blend',
-                               'resolution_x': 1920,
-                               'resolution_y': 1080,
-                               'render_engine': 'CYCLES',
-                               'scene': 'env',
-                               'output_path': '//frame_####',
-                               'frame_start': 1,
-                               'frame_end': 250,
-                               'frame_step': 1,
-                               'chunks_size': 25,
-                               })
-    task.add_task_by_settings({'task_name': 'playblast',
-                               'blend_file': 'test_blend',
-                               'resolution_x': 1920,
-                               'resolution_y': 1080,
-                               'render_engine': 'BLENDER_WORKBENCH',
-                               'scene': 'main',
-                               'output_path': '//frame_####',
-                               'frame_start': 1,
-                               'frame_end': 250,
-                               'frame_step': 1,
-                               'chunks_size': -1,
-                               })
+    # task.add_task_by_settings({'task_name': 'enviro',
+    #                            'blend_file': 'test_blend',
+    #                            'resolution_x': 1920,
+    #                            'resolution_y': 1080,
+    #                            'render_engine': 'CYCLES',
+    #                            'scene': 'env',
+    #                            'output_path': '//frame_####',
+    #                            'frame_start': 1,
+    #                            'frame_end': 250,
+    #                            'frame_step': 1,
+    #                            'chunks_size': 25,
+    #                            })
+    # task.add_task_by_settings({'task_name': 'playblast',
+    #                            'blend_file': 'test_blend',
+    #                            'resolution_x': 1920,
+    #                            'resolution_y': 1080,
+    #                            'render_engine': 'BLENDER_WORKBENCH',
+    #                            'scene': 'main',
+    #                            'output_path': '//frame_####',
+    #                            'frame_start': 1,
+    #                            'frame_end': 250,
+    #                            'frame_step': 1,
+    #                            'chunks_size': -1,
+    #                            })
 
     # task.get_next_task()
     task.save_tasks_to_file('./task_list.json')

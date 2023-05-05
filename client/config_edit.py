@@ -40,19 +40,7 @@ dpg.create_context()
 dpg.create_viewport(title='WorkerConfig', width=600, height=300)
 
 
-"""def update_config():
-    with open('config.json', 'w') as file:
-        json.dump({
-            'blender_bin': dpg.get_value('blender_bin'),
-            'server_ip': dpg.get_value('server_ip'),
-            'api_key': dpg.get_value('api_key'),
-            'working_dir': dpg.get_value('working_dir'),
-        }, file)
-"""
-
 # file dialog
-
-
 def file_callback(sender, app_data) -> None:
     # print('OK was clicked.')
     # print("Sender: ", sender)

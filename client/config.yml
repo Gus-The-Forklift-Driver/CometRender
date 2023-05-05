@@ -3,5 +3,5 @@ server:
   key: demo
 worker:
   blender_bin: C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe
-  name: LYOB22W262
-  working_dir: D:\tmp\
+  name: DESKTOP-RMSABPR
+  working_dir: C:\Users\benhu\Desktop\remote_test\

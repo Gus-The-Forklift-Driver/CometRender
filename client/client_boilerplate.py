@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 
@@ -57,7 +58,25 @@ class client():
         return requests.get(url=f'{self.adress}/task_status',
                             headers={'key': self.apiKey}).json()
 
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def post_task(self, task):
         return requests.post(url=f'{self.adress}/new_task',
                              headers={'key': self.apiKey},
                              json=task)
+
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
+    def post_delete_task(self, uuid):
+        return requests.post(url=f'{self.adress}/delete_task/{uuid}',
+                             headers={'key': self.apiKey},
+                             )
+
+    def get_file(self, path, working_dir):
+        # absolute path to file
+        destination_file = os.path.join(working_dir, path)
+        # create intermediary folders
+        os.makedirs(os.path.dirname(destination_file), exist_ok=True)
+        # get the file
+        r = requests.get(url=f'{self.adress}/files/{path}', headers={'key': self.apiKey})
+        r.raise_for_status()
+        # save file
+        open(destination_file, 'wb').write(r.content)

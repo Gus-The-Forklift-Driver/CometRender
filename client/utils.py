@@ -4,41 +4,42 @@ import bpy
 import os
 
 
-def check_external_files():
+def check_external_files(working_dir):
     # this function check the existance of external files
     # beware that only images,cache files and libraries are checked
     # this function is scuffed as hell
     missing_files = []
-    root = os.path.dirname(bpy.data.filepath)
-    os.chdir(root)
-    # logging.info(root)
+    blend_root = os.path.dirname(bpy.data.filepath)
+    os.chdir(working_dir)
     for img in bpy.data.images:
         if img.filepath != None and len(img.filepath) > 0:
-            relative_filepath = img.filepath.replace('//', '')
+            relative_filepath = img.filepath.replace('//', './')
+            relative_filepath = relative_filepath.replace('\\', '/')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
-            # print(f'IMAGE | {os.path.join(root,filepath)}')
-            logging.info(f'IMAGE | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            #logging.info(f'IMAGE | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
-                missing_files.append(relative_filepath)
+                missing_files.append(os.path.join(os.path.relpath(blend_root, working_dir), relative_filepath))
 
     for cache in bpy.data.cache_files:
         if cache.filepath != None and len(cache.filepath) > 0:
-            relative_filepath = cache.filepath.replace('//', '')
+            relative_filepath = cache.filepath.replace('//', './')
+            relative_filepath = relative_filepath.replace('\\', '/')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
-            logging.info(f'CACHE | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            #logging.info(f'CACHE | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
-                missing_files.append(relative_filepath)
+                missing_files.append(os.path.join(os.path.relpath(blend_root, working_dir), relative_filepath))
 
     for library in bpy.data.libraries:
         if library.filepath != None and len(library.filepath) > 0:
-            relative_filepath = library.filepath.replace('//', '')
+            relative_filepath = library.filepath.replace('//', './')
+            relative_filepath = relative_filepath.replace('\\', '/')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
-            logging.info(f'library | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            #logging.info(f'library | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
-                missing_files.append(relative_filepath)
+                missing_files.append(os.path.join(os.path.relpath(blend_root, working_dir), relative_filepath))
 
     return missing_files
 
@@ -79,6 +80,10 @@ def set_settings(settings, chunk):
     current_scene.render.engine = settings['render_engine']
     # filepath
     current_scene.render.filepath = settings['output_path']
+
+
+def clean_path(path):
+    pass
 
 
 if __name__ == '__main__':

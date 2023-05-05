@@ -25,7 +25,7 @@ with dpg.theme(tag='error'):
 # task_list = client.get_task_list()
 
 
-def get_tasks(prettify: bool = True):
+def get_tasks(prettify: bool = False):
     tasks = client.get_task_list()
     if prettify:
         for id in range(len(tasks)):
@@ -60,27 +60,35 @@ def upload_task():
     print(client.post_task(task))
 
 
+def delete_task(sender, app_data, user_data):
+    print(client.post_delete_task(user_data))
+
+
 with dpg.window(tag='main'):
     # current task list
-    task_list = get_tasks(prettify=True)
+    task_list = get_tasks()
 
     with dpg.tab_bar():
         with dpg.tab(label='manager'):
 
             with dpg.table(header_row=True, resizable=True, tag='display_list', policy=dpg.mvTable_SizingStretchProp):
                 for key in task_list[0]:
+                    if key == 'uuid' or key == 'chunks' or key == 'errors':
+                        continue
                     dpg.add_table_column(label=key)
                 dpg.add_table_column(width_fixed=True)
 
                 for task in task_list:
                     with dpg.table_row():
                         for info in task:
+                            if info == 'uuid' or info == 'chunks' or info == 'errors':
+                                continue
                             dpg.add_text(task[info])
                         with dpg.group(horizontal=True):
 
                             dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Up)
                             dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Down)
-                            dpg.add_button(label='x')
+                            dpg.add_button(label='x', user_data=task['uuid'], callback=delete_task)
             dpg.add_separator()
             # New tasks settings
             dpg.add_input_text(label='Task name', tag='task_name')
