@@ -10,7 +10,7 @@ def check_external_files(working_dir):
     # this function is scuffed as hell
     missing_files = []
     blend_root = os.path.dirname(bpy.data.filepath)
-    os.chdir(working_dir)
+    os.chdir(blend_root)
     for img in bpy.data.images:
         if img.filepath != None and len(img.filepath) > 0:
             relative_filepath = img.filepath.replace('//', './')
@@ -43,11 +43,17 @@ def check_external_files(working_dir):
 
     return missing_files
 
+# if no root is specified the current dir is used
+
 
 def locate_blend_file(blend: str, root: str = f'.{os.sep}'):
     for root, dirs, files in os.walk(root):
         for file in files:
             if file == blend + '.blend':
+                print('match')
+                return os.path.join(root, file)
+            elif file == blend:
+                print('match')
                 return os.path.join(root, file)
     # no files matching the name were found
     return None
@@ -75,7 +81,7 @@ def set_settings(settings, chunk):
     # frame range
     current_scene.frame_start = chunk[0]
     current_scene.frame_end = chunk[1]
-    current_scene.frame_step = settings['frame_step']
+    # current_scene.frame_step = settings['frame_step']
     # engine
     # current_scene.render.engine = settings['render_engine']
     # filepath

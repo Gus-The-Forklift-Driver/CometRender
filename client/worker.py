@@ -65,13 +65,15 @@ def main():
                     logging.error('Problem with loading .blend file', exc_info=True)
                     client.post_error('pb_blendfile', str(e), task['uuid'])
                 else:
-                    missing_files = utils.check_external_files()
+                    # diabled file checking for now
+                    '''
+                    missing_files = utils.check_external_files(config['worker']["working_dir"])
                     if len(missing_files) > 0:
                         logging.error(f'Missing external files : ')
                         for file in missing_files:
                             logging.error(file)
-                        client.post_error('pb_settings', missing_files, task['uuid'])
-
+                        client.post_error('pb_local_files', missing_files, task['uuid'])
+                    '''
                     try:
                         utils.set_settings(task, chunk)
 
@@ -91,7 +93,7 @@ def main():
                 logging.error(f"File doesn't exist : '{config['worker']['working_dir']}{task_blend_file}.blend'")
                 logging.info(f"file should be here {config['worker']['working_dir']}{task_blend_file}.blend")
                 client.post_error('pb_blendfile_missing',
-                                  f'Looked in {config["worker"]["working_dir"]}', task['uuid'])
+                                  f'Looked in {config["worker"]["working_dir"]}', task['uuid'], chunk=chunk)
 
         task = None
         chunk = None
@@ -110,7 +112,7 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        logging.info('User ended workder')
+        logging.info('User ended worker')
     except Exception as e:
         logging.critical('', exc_info=True)
     if task != None:

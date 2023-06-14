@@ -109,6 +109,7 @@ class TaskManager():
                 if error['worker_name'] == worker_name:
                     dirty = True
             if dirty:
+                logging.info(f'Worker {worker_name} is dirty, skipping task')
                 continue
             for chunk in task['chunks']:
                 if chunk[1] == 'todo':
@@ -218,7 +219,7 @@ if __name__ == '__main__':
     task = TaskManager()
 
     task.add_task_by_settings({'task_name': 'test',
-                               'blend_file': 'sequence_1/render.blend',
+                               'blend_file': 'render',
                                'scene': 'main',
                                'frame_start': 1,
                                'frame_end': 250,
