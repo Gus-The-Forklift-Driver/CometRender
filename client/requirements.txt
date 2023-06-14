@@ -1,0 +1,5 @@
+PyYaml
+bpy
+coloredlogs
+retry
+dearpygui
