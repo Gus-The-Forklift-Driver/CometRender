@@ -147,12 +147,8 @@ class TaskManager():
                 "uuid": task_uuid,
                 "name": task_settings['task_name'],
                 "blend_file": task_settings['blend_file'],
-                "resolution_x": task_settings['resolution_x'],
-                "resolution_y": task_settings['resolution_y'],
-                "render_engine": task_settings['render_engine'],
-                "scene": task_settings['scene'],
-                "frame_step": task_settings['frame_step'],
-                "output_path": task_settings['output_path'],
+                "frame_start": task_settings['frame_start'],
+                "frame_end": task_settings['frame_end'],
                 "errors": [],
                 "chunks": chunks, })
             logging.info(f'Added task named : {task_settings["task_name"]}')
@@ -223,49 +219,11 @@ if __name__ == '__main__':
 
     task.add_task_by_settings({'task_name': 'test',
                                'blend_file': 'sequence_1/render.blend',
-                               'resolution_x': 1920,
-                               'resolution_y': 1080,
-                               'render_engine': 'BLENDER_EEVEE',
                                'scene': 'main',
-                               'output_path': '//output/frame_####',
                                'frame_start': 1,
                                'frame_end': 250,
-                               'frame_step': 1,
                                'chunks_size': 50,
                                })
-    # task.add_task_by_settings({'task_name': 'enviro',
-    #                            'blend_file': 'test_blend',
-    #                            'resolution_x': 1920,
-    #                            'resolution_y': 1080,
-    #                            'render_engine': 'CYCLES',
-    #                            'scene': 'env',
-    #                            'output_path': '//frame_####',
-    #                            'frame_start': 1,
-    #                            'frame_end': 250,
-    #                            'frame_step': 1,
-    #                            'chunks_size': 25,
-    #                            })
-    # task.add_task_by_settings({'task_name': 'playblast',
-    #                            'blend_file': 'test_blend',
-    #                            'resolution_x': 1920,
-    #                            'resolution_y': 1080,
-    #                            'render_engine': 'BLENDER_WORKBENCH',
-    #                            'scene': 'main',
-    #                            'output_path': '//frame_####',
-    #                            'frame_start': 1,
-    #                            'frame_end': 250,
-    #                            'frame_step': 1,
-    #                            'chunks_size': -1,
-    #                            })
 
-    # task.get_next_task()
     task.save_tasks_to_file('./task_list.json')
-
-    # task.change_chunk_status('96a4f353-d23d-46ce-8b44-839c1a9709b4', [10, 60], 'done')
-
-    # task.move_task('860dd42e-b012-416f-8a46-965132c40bcf', 10)
-
-    # print(task.get_tasks_names())
-    # task.save_tasks_to_file()
-    # task.save_tasks_to_file('./task_list.json')
     logging.info('===DONE===')

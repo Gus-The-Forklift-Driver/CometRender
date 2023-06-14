@@ -1,1 +1,51 @@
-[{"uuid": "7fc20278-d9b9-420c-bdac-d650b45856ca", "name": "test", "blend_file": "sequence_1/render.blend", "resolution_x": 1920, "resolution_y": 1080, "render_engine": "BLENDER_EEVEE", "scene": "main", "frame_step": 1, "output_path": "//output/frame_####", "errors": [], "chunks": [[[1, 51], "todo"], [[52, 102], "todo"], [[103, 153], "todo"], [[154, 250], "todo"], [[205, 250], "todo"]]}]
+[
+    {
+        "uuid": "7fc20278-d9b9-420c-bdac-d650b45856ca",
+        "name": "test",
+        "blend_file": "sequence_1/render.blend",
+        "resolution_x": 1920,
+        "resolution_y": 1080,
+        "render_engine": "BLENDER_EEVEE",
+        "scene": "main",
+        "frame_step": 1,
+        "output_path": "//output/frame_####",
+        "errors": [],
+        "chunks": [
+            [
+                [
+                    1,
+                    51
+                ],
+                "todo"
+            ],
+            [
+                [
+                    52,
+                    102
+                ],
+                "todo"
+            ],
+            [
+                [
+                    103,
+                    153
+                ],
+                "todo"
+            ],
+            [
+                [
+                    154,
+                    250
+                ],
+                "todo"
+            ],
+            [
+                [
+                    205,
+                    250
+                ],
+                "todo"
+            ]
+        ]
+    }
+]

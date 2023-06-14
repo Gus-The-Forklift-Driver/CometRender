@@ -17,7 +17,7 @@ def check_external_files(working_dir):
             relative_filepath = relative_filepath.replace('\\', '/')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
-            #logging.info(f'IMAGE | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            # logging.info(f'IMAGE | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
                 missing_files.append(os.path.join(os.path.relpath(blend_root, working_dir), relative_filepath))
 
@@ -27,7 +27,7 @@ def check_external_files(working_dir):
             relative_filepath = relative_filepath.replace('\\', '/')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
-            #logging.info(f'CACHE | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            # logging.info(f'CACHE | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
                 missing_files.append(os.path.join(os.path.relpath(blend_root, working_dir), relative_filepath))
 
@@ -37,7 +37,7 @@ def check_external_files(working_dir):
             relative_filepath = relative_filepath.replace('\\', '/')
             absolute_filepath = os.path.abspath(relative_filepath)
             file_exist = os.path.isfile(absolute_filepath)
-            #logging.info(f'library | {relative_filepath} | {absolute_filepath} | {file_exist}')
+            # logging.info(f'library | {relative_filepath} | {absolute_filepath} | {file_exist}')
             if not file_exist:
                 missing_files.append(os.path.join(os.path.relpath(blend_root, working_dir), relative_filepath))
 
@@ -68,18 +68,18 @@ def save_config(config, file='./config.yml'):
 def set_settings(settings, chunk):
     # set the scene
     # bpy.context.scene = settings['scene']
-    current_scene = bpy.data.scenes[settings['scene']]
+    current_scene = bpy.context.scene
     # set the settings
-    current_scene.render.resolution_x = settings['resolution_x']
-    current_scene.render.resolution_y = settings['resolution_y']
+    # current_scene.render.resolution_x = settings['resolution_x']
+    # current_scene.render.resolution_y = settings['resolution_y']
     # frame range
     current_scene.frame_start = chunk[0]
     current_scene.frame_end = chunk[1]
     current_scene.frame_step = settings['frame_step']
     # engine
-    current_scene.render.engine = settings['render_engine']
+    # current_scene.render.engine = settings['render_engine']
     # filepath
-    current_scene.render.filepath = settings['output_path']
+    # current_scene.render.filepath = settings['output_path']
 
 
 def clean_path(path):

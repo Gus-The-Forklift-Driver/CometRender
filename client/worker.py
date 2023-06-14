@@ -81,7 +81,7 @@ def main():
                     else:
                         try:
                             logging.info(f'beep boop computing {task["name"]}')
-                            bpy.ops.render.render(animation=True, scene=task['scene'])
+                            bpy.ops.render.render(animation=True)
                         except Exception as e:
                             logging.error('Problem with render', exc_info=True)
                             client.post_error('pb_render', str(e), task['uuid'], chunk)
