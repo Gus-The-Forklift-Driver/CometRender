@@ -1,7 +1,7 @@
 server:
-  ip: http://localhost:8000
+  ip: http://0.0.0.0:8000
   key: demo
 worker:
-  blender_bin: C:\Program Files (x86)\Steam\steamapps\common\Blender\blender.exe
-  name: LYOB22W262
-  working_dir: D:/OneDrive - Groupe E.D.H/CometTest/
+  blender_bin: D:/Games/Steam/steamapps/common/Blender/blender.exe
+  name: DESKTOP-RMSABPR
+  working_dir: D:\OneDrive - Groupe E.D.H\PFE_B

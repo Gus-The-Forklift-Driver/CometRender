@@ -1,7 +1,30 @@
 import logging
+import winreg
 import yaml
 import bpy
 import os
+
+
+def locate_blender():
+    potential_paths = [
+        'C:/Program Files/Blender Foundation/Blender 3.5/blender.exe'
+    ]
+    for path in potential_paths:
+        if os.path.isfile(path):
+            return path
+    try:
+        key = winreg.OpenKey(winreg.HKEY_CLASSES_ROOT, "Applications\\blender.exe\\shell\\open\\command")
+        value = winreg.QueryValueEx(key, "")[0]
+        path = value.split('"')[1]
+        path = path.replace('\\', '/')
+        if os.path.isfile(path):
+            return path
+    except:
+        pass
+    else:
+        return path
+
+    return 'Blender not found'
 
 
 def check_external_files(working_dir):
@@ -130,5 +153,4 @@ def clean_path(path):
 
 
 if __name__ == '__main__':
-    cfg = load_config()
-    save_config(cfg)
+    print(locate_blender())
