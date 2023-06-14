@@ -71,7 +71,7 @@ def save_config(config, file='./config.yml'):
     return
 
 
-def set_settings(settings, chunk):
+def set_settings(settings, chunk, use_cpus=False):
     # set the scene
     # bpy.context.scene = settings['scene']
     current_scene = bpy.context.scene
@@ -86,25 +86,43 @@ def set_settings(settings, chunk):
     # current_scene.render.engine = settings['render_engine']
     # filepath
     # current_scene.render.filepath = settings['output_path']
-    bpy.context.preferences.addons
 
     # set to use gpu
     current_scene.cycles.device = 'GPU'
-
+    # quick and dirty way to select best gpu
+    # might not work
     prefs = bpy.context.preferences
     cprefs = prefs.addons['cycles'].preferences
+    cprefs.refresh_devices()
+    logging.info(f'Devices found : {len(cprefs.devices)}')
 
-    # Attempt to set GPU device types if available
-    for compute_device_type in ('HIP', 'CUDA',  'NONE'):
-        try:
-            cprefs.compute_device_type = compute_device_type
-            break
-        except TypeError:
-            pass
-
-    # Enable all CPU and GPU devices
+    selected_backend = 'NONE'
     for device in cprefs.devices:
-        device.use = True
+
+        if device.type == 'OPTIX':
+            selected_backend = 'OPTIX'
+            break
+        elif device.type == 'CUDA':
+            selected_backend = 'CUDA'
+
+        elif device.type == 'HIP':
+            selected_backend = 'HIP'
+
+        elif device.type == 'ONEAPI':
+            selected_backend = 'ONEAPI'
+
+        elif device.type == 'METAL':
+            selected_backend = 'METAL'
+
+    cprefs.compute_device_type = selected_backend
+    for device in cprefs.devices:
+        if device.type == selected_backend:
+            device.use = True
+        elif device.type == 'CPU':
+            device.use = use_cpus
+        else:
+            device.use = False
+        logging.info(f'Name : {device.name} | Type : {device.type} | In use : {device.use}')
 
 
 def clean_path(path):
