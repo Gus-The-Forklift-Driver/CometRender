@@ -1,11 +1,7 @@
 import json
 import platform
-import yaml
-import shutil
 import dearpygui.dearpygui as dpg
-import bpy
 import utils
-
 import os
 
 default_config = {
