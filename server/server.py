@@ -27,12 +27,12 @@ app.add_middleware(
 
 task_manager = task_manager.TaskManager()
 
-# if os.path.exists('./current_status.json'):
-#     task_manager.load_tasks_from_file('./current_status.json')
-# else:
-#     task_manager.load_tasks_from_file('./task_list.json')
+if os.path.exists('./current_status.json'):
+    task_manager.load_tasks_from_file('./current_status.json')
+else:
+    task_manager.load_tasks_from_file('./task_list.json')
 
-task_manager.load_tasks_from_file('./task_list.json')
+# task_manager.load_tasks_from_file('./task_list.json')
 
 
 @app.get("/")
@@ -65,7 +65,7 @@ def check_login(key: str | None = Header(default=None)):
 @ app.get('/next_task')
 def next_task(key: str | None = Header(default=None), workername: str | None = Header(default=None)):
     if utils.verify_key(key):
-        task_manager.add_worker(workername)
+        task_manager.add_worker(workername, 0)
         next_task, chunk = task_manager.get_next_task(workername)
         if next_task != None:
             task_manager.save_tasks_to_file()
@@ -79,7 +79,11 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, wor
     if utils.verify_key(key):
         chunk = list(eval(chunk))
         task_manager.change_chunk_status(task_uuid, chunk, status)
-        task_manager.add_worker(worker_name)
+        if status == 'chunk_done':
+            frames = chunk[1]-chunk[0]
+        else:
+            frames = 0
+        task_manager.add_worker(worker_name, frames)
 
 
 @ app.post('/error/{task_uuid}')
@@ -118,6 +122,13 @@ async def workers():
 def move_task(task_uuid: str, offset: int, key: str | None = Header(default=None)):
     if utils.verify_key(key):
         task_manager.move_task(task_uuid, offset)
+    return
+
+
+@ app.post('/clean_workers/{task_uuid}')
+def move_task(task_uuid: str, key: str | None = Header(default=None)):
+    if utils.verify_key(key):
+        task_manager.clean_workers(task_uuid)
     return
 
 

@@ -113,7 +113,7 @@ def update_list_view():
                         dpg.bind_item_theme(dpg.last_item(), 'todo')
                     elif task[1] == 'running':
                         dpg.bind_item_theme(dpg.last_item(), 'running')
-                    elif task[1] == 'chunks_done':
+                    elif task[1] == 'chunk_done':
                         dpg.bind_item_theme(dpg.last_item(), 'done')
                     else:
                         dpg.bind_item_theme(dpg.last_item(), 'error')

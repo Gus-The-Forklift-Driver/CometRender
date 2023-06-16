@@ -118,7 +118,7 @@ class TaskManager():
                     return task, chunk[0]
 
         # no valid tasks have been found
-        logging.info(f'No task to send for {worker_name}')
+        # logging.info(f'No task to send for {worker_name}')
         return None, None
 
     def get_tasks_names(self):
@@ -169,10 +169,14 @@ class TaskManager():
     def change_chunk_status(self, uuid, chunk_in, status):
         for task in self.tasks:
             if task['uuid'] == uuid:
+                # logging.critical('=============CHUNK DEBUG===========')
+                # logging.critical(f'uuid : {uuid} | chunk_in : {chunk_in} | status : {status}')
+                # logging.critical(f'type : {type(chunk_in)} | 0 : {chunk_in[0]} | 1 : {chunk_in[1]}')
                 for chunk in task['chunks']:
                     if chunk[0] == chunk_in:
                         chunk[1] = status
                         logging.info(f'Moved {chunk_in} to {status} for {task["name"]}')
+
                         return
                 logging.info(f'Could not find chunk : {chunk_in} for {task["name"]}')
                 return
@@ -206,12 +210,21 @@ class TaskManager():
                 return
         logging.error(f'Failed to delete task with : {task_uuid} uuid')
 
-    def add_worker(self, name: str):
+    def add_worker(self, name: str, frame_count):
         # logs workers and completed tasks
         if name in self.workers:
-            self.workers[name] += 1
+            self.workers[name] += frame_count
         else:
-            self.workers[name] = 1
+            self.workers[name] = frame_count
+
+    def clean_workers(self, task_uuid):
+        for task_id in range(len(self.tasks)):
+            if self.tasks[task_id]['uuid'] == task_uuid:
+                logging.info(f'Cleaning workers for : {self.tasks[task_id]["name"]}')
+                for error in self.tasks[task_id]['errors']:
+                    error['worker_name'] += 'cleaned'
+                return
+        logging.error(f'Failed to clean task with : {task_uuid} uuid')
 
 
 if __name__ == '__main__':
