@@ -79,7 +79,7 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, wor
     if utils.verify_key(key):
         chunk = list(eval(chunk))
         task_manager.change_chunk_status(task_uuid, chunk, status)
-        if status == 'chunk_done':
+        if status == 'chunks_done':
             frames = chunk[1]-chunk[0]
         else:
             frames = 0

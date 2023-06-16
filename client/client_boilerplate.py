@@ -70,6 +70,13 @@ class client():
                              headers={'key': self.apiKey},
                              )
 
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
+    def post_move_task(self, uuid, offset):
+        return requests.post(url=f'{self.adress}/delete_task/{uuid}',
+                             headers={'key': self.apiKey,
+                                      'offset': offset},
+                             )
+
     def get_file(self, path, working_dir):
         # absolute path to file
         destination_file = os.path.join(working_dir, path)

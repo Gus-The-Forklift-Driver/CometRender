@@ -64,9 +64,12 @@ def delete_task(sender, app_data, user_data):
 
 
 def move_task(sender, app_data, user_data):
+    dpg.show_item('loading')
     print(sender)
     print(app_data)
     print(user_data)
+    print(client.post_move_task(user_data[0], user_data[1]))
+    update_table()
 
 
 def update_table():
@@ -90,8 +93,8 @@ def update_table():
                         dpg.add_text(task[info])
                     with dpg.group(horizontal=True):
 
-                        dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Up, callback=move_task)
-                        dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Down, callback=move_task)
+                        dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Up, callback=move_task, user_data=[task['uuid'], +1])
+                        dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Down, callback=move_task, user_data=[task['uuid'], -1])
                         dpg.add_button(label='x', user_data=task['uuid'], callback=delete_task)
     dpg.hide_item('loading')
 
@@ -99,24 +102,28 @@ def update_table():
 def update_list_view():
     dpg.show_item('loading_list')
     task_list = get_tasks()
-    dpg.delete_item('list_view_container')
+    dpg.delete_item('list_view_container', children_only=True)
+
     for task in task_list:
-        with dpg.table(header_row=False, parent='list_view_container_top'):
+        with dpg.table(header_row=False, parent='list_view_container'):
             row_count = len(task['chunks'])+1
             for x in range(row_count):
                 dpg.add_table_column()
             with dpg.table_row():
                 dpg.add_text(default_value=task['name'])
+
                 for task in task['chunks']:
+                    dpg.add_text(task[0])
+                    '''
                     dpg.add_button(label=task[0], width=-1)
                     if task[1] == 'todo':
                         dpg.bind_item_theme(dpg.last_item(), 'todo')
                     elif task[1] == 'running':
                         dpg.bind_item_theme(dpg.last_item(), 'running')
-                    elif task[1] == 'chunk_done':
+                    elif task[1] == 'chunks_done':
                         dpg.bind_item_theme(dpg.last_item(), 'done')
                     else:
-                        dpg.bind_item_theme(dpg.last_item(), 'error')
+                        dpg.bind_item_theme(dpg.last_item(), 'error')'''
 
     dpg.hide_item('loading_list')
 
