@@ -1,7 +1,0 @@
-server:
-  ip: http://127.0.0.1:8000
-  key: demo
-worker:
-  blender_bin: D:/Games/Steam/steamapps/common/Blender/blender.exe
-  name: DESKTOP-RMSABPR
-  working_dir: ./
