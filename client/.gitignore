@@ -2,3 +2,4 @@ test.py
 test
 __pycache__
 log
+config.yml
