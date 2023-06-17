@@ -80,7 +80,7 @@ def update_table():
     with dpg.table(header_row=True, resizable=True, tag='display_list', policy=dpg.mvTable_SizingStretchProp, parent='list_container'):
         if len(task_list) > 0:
             for key in task_list[0]:
-                if key == 'uuid' or key == 'chunks' or key == 'errors':
+                if key == 'uuid':
                     continue
                 dpg.add_table_column(label=key)
             dpg.add_table_column(width_fixed=True)
@@ -88,13 +88,34 @@ def update_table():
             for task in task_list:
                 with dpg.table_row():
                     for info in task:
-                        if info == 'uuid' or info == 'chunks' or info == 'errors':
+                        if info == 'uuid':
                             continue
-                        dpg.add_text(task[info])
+                        elif info == 'chunks':
+                            todo = 0
+                            running = 0
+                            done = 0
+                            error = 0
+                            for chunk in task[info]:
+                                if chunk[1] == 'todo':
+                                    todo += 1
+                                if chunk[1] == 'running':
+                                    running += 1
+                                if chunk[1] == 'chunks_done' or chunk[1] == 'done':
+                                    done += 1
+                                if chunk[1] == 'error':
+                                    error += 1
+                            dpg.add_text(f'todo: {todo}|running: {running}|done: {done}')
+
+                        elif info == 'errors':
+                            dpg.add_text(f'{len(task[info])}')
+
+                        else:
+                            dpg.add_text(task[info])
+
                     with dpg.group(horizontal=True):
 
-                        dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Up, callback=move_task, user_data=[task['uuid'], +1])
-                        dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Down, callback=move_task, user_data=[task['uuid'], -1])
+                        dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Up, callback=move_task, user_data=[task['uuid'], -1])
+                        dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Down, callback=move_task, user_data=[task['uuid'], +1])
                         dpg.add_button(label='x', user_data=task['uuid'], callback=delete_task)
     dpg.hide_item('loading')
 
@@ -131,28 +152,29 @@ def update_list_view():
 with dpg.window(tag='main'):
     # current task list
     task_list = get_tasks()
-
+    '''
     with dpg.tab_bar():
         with dpg.tab(label='manager', tag='manager'):
-            with dpg.group(tag='list_container'):
-                pass
-            dpg.add_separator()
-            # New tasks settings
-            dpg.add_input_text(label='Task name', tag='task_name')
-            dpg.add_input_text(label='Blend file', tag='blend_file')
-            with dpg.group(horizontal=True):
-                dpg.add_input_int(width=120, tag='frame_start', default_value=1)
-                dpg.add_input_int(width=120, tag='frame_end', default_value=250)
+            pass'''
+    with dpg.group(tag='list_container'):
+        pass
+    dpg.add_separator()
+    # New tasks settings
+    dpg.add_input_text(label='Task name', tag='task_name')
+    dpg.add_input_text(label='Blend file', tag='blend_file')
+    with dpg.group(horizontal=True):
+        dpg.add_input_int(width=120, tag='frame_start', default_value=1)
+        dpg.add_input_int(width=120, tag='frame_end', default_value=250)
 
-                dpg.add_text('frame range')
-                _help('frame range : start | end')
-            dpg.add_input_int(label='Chunk size', tag='chunks_size', default_value=50)
+        dpg.add_text('frame range')
+        _help('frame range : start | end')
+    dpg.add_input_int(label='Chunk size', tag='chunks_size', default_value=50)
 
-            dpg.add_button(label='Post task', callback=upload_task)
-            with dpg.group(horizontal=True):
-                dpg.add_button(label='update', callback=update_table)
-                dpg.add_loading_indicator(show=False, style=1, tag='loading', radius=2, color=(230, 230, 230, 255))
-
+    dpg.add_button(label='Post task', callback=upload_task)
+    with dpg.group(horizontal=True):
+        dpg.add_button(label='update', callback=update_table)
+        dpg.add_loading_indicator(show=False, style=1, tag='loading', radius=2, color=(230, 230, 230, 255))
+'''
 # ===================================================
 # status tab
 
@@ -167,7 +189,7 @@ with dpg.window(tag='main'):
             dpg.add_text('Workers')
             workers = client.get_workers()
             dpg.add_text(workers)
-
+'''
 # dpg.configure_app(docking=True)
 dpg.setup_dearpygui()
 dpg.show_viewport()

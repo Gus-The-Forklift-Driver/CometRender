@@ -193,13 +193,16 @@ class TaskManager():
         return
 
     def move_task(self, task_uuid: str, offset: int):
-        # clamp the offset
-        offset = max(0, min(offset, len(self.tasks)-1))
         # find the place of the task in the task array
         for task_id in range(len(self.tasks)):
             if self.tasks[task_id]['uuid'] == task_uuid:
                 break
-        self.tasks.insert(task_id + offset, self.tasks.pop(task_id))
+
+        # clamp the offset
+        new_index = max(0, min(task_id + offset, len(self.tasks)-1))
+        # move task
+        logging.info(f'Original index : {task_id} | new index : {new_index} | offset : {offset}')
+        self.tasks.insert(new_index, self.tasks.pop(task_id))
         return
 
     def delete_task(self, task_uuid: str):

@@ -88,7 +88,7 @@ def main():
                             logging.error('Problem with render', exc_info=True)
                             client.post_error('pb_render', str(e), task['uuid'], chunk)
                         else:
-                            client.post_progress(task_uuid=task['uuid'], chunk=chunk, status="chunk_done")
+                            client.post_progress(task_uuid=task['uuid'], chunk=chunk, status="done")
             else:
                 logging.error(f"File doesn't exist : '{config['worker']['working_dir']}{task_blend_file}.blend'")
                 logging.info(f"file should be here {config['worker']['working_dir']}{task_blend_file}.blend")

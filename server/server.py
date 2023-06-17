@@ -79,7 +79,7 @@ def update_progress(task_uuid: str, chunk: str | float, status: str | float, wor
     if utils.verify_key(key):
         chunk = list(eval(chunk))
         task_manager.change_chunk_status(task_uuid, chunk, status)
-        if status == 'chunks_done':
+        if status == 'chunks_done' or status == 'done':
             frames = chunk[1]-chunk[0]
         else:
             frames = 0
@@ -100,7 +100,7 @@ def add_task(data=Body(), key: str | None = Header(default=None)):
         task_manager.add_task_by_settings(data)
         task_manager.save_tasks_to_file()
     else:
-        raise HTTPException(status_code=400, detail="Bad request")
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 
 @ app.get('/task_list')
@@ -119,9 +119,9 @@ async def workers():
 
 
 @ app.post('/move_task/{task_uuid}')
-def move_task(task_uuid: str, offset: int, key: str | None = Header(default=None)):
+def move_task(task_uuid: str, offset: str = Header(default=None), key: str | None = Header(default=None)):
     if utils.verify_key(key):
-        task_manager.move_task(task_uuid, offset)
+        task_manager.move_task(task_uuid, int(offset))
     return
 
 
