@@ -28,7 +28,7 @@ print(json.dumps(config, indent=4))
 config['worker']['blender_bin'] = utils.locate_blender()
 
 dpg.create_context()
-dpg.create_viewport(title='WorkerConfig', width=1000, height=300)
+dpg.create_viewport(title='WorkerConfig', width=1000, height=600)
 
 
 # file dialog

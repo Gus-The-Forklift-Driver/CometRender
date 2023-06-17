@@ -6,7 +6,7 @@ config = utils.load_config()
 client = bpclient('manager', apiKey=config['server']['key'], adress=config['server']['ip'])
 
 dpg.create_context()
-dpg.create_viewport(title=' ', width=600, height=600)
+dpg.create_viewport(title='Task Edit', width=600, height=600)
 
 # create interface themes
 with dpg.theme(tag='todo'):
