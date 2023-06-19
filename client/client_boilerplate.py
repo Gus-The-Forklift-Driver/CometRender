@@ -70,7 +70,7 @@ class client():
                              headers={'key': self.apiKey},
                              )
 
-    # @retry(tries=-1, delay=1, backoff=2, max_delay=10)
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
     def post_move_task(self, uuid, offset):
         return requests.post(url=f'{self.adress}/move_task/{uuid}',
                              headers={'key': self.apiKey,

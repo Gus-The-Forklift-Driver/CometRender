@@ -1,4 +1,5 @@
 __pycache__
 apiKeys
 current_status.json
+task_list.json
 env
