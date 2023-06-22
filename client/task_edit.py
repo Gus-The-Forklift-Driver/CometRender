@@ -124,8 +124,9 @@ def update_table():
         for worker in workers:
             with dpg.group(horizontal=True):
                 dpg.add_text(worker)
-                dpg.add_progress_bar(default_value=(workers[worker]/frame_count),
-                                     overlay=f'{workers[worker]}/{frame_count}')
+                if frame_count != 0:
+                    dpg.add_progress_bar(default_value=(workers[worker]/frame_count),
+                                         overlay=f'{workers[worker]}/{frame_count}')
 
     dpg.hide_item('loading')
 
