@@ -118,7 +118,7 @@ with dpg.window(tag='main_window'):
     with dpg.group(horizontal=True):
         dpg.add_button(label='Ping Server', callback=ping_server)
         dpg.add_text('/', tag='ping_status')
-    dpg.add_button(label='Enable Onedrive', callback=enable_onedrive)
+    # dpg.add_button(label='Enable Onedrive', callback=enable_onedrive)
 
 dpg.setup_dearpygui()
 dpg.show_viewport()
