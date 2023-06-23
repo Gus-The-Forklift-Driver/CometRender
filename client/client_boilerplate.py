@@ -87,3 +87,8 @@ class client():
         r.raise_for_status()
         # save file
         open(destination_file, 'wb').write(r.content)
+
+
+if __name__ == '__main__':
+    cl = client(name='test', apiKey='DEMO', adress='http://127.0.0.1:8001')
+    cl.post_progress('03862a0d-8a63-4afc-8dfb-1b880a8a59aa', [1, 4], 'chunks_done')

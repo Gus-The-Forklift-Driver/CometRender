@@ -12,8 +12,8 @@ app = FastAPI(docs_url=None, redoc_url=None)
 
 origins = [
     "http://localhost",
-    "http://localhost:3000",
     "http://localhost:8000",
+    "http://localhost:2000",
 ]
 
 app.add_middleware(
@@ -77,10 +77,10 @@ def next_task(key: str | None = Header(default=None), workername: str | None = H
 @ app.post('/progress/{task_uuid}')
 def update_progress(task_uuid: str, chunk: str | float, status: str | float, worker_name: str, key: str | None = Header(default=None)):
     if utils.verify_key(key):
-        chunk = list(eval(chunk))
-        task_manager.change_chunk_status(task_uuid, chunk, status)
+        chunk_t = [int(chunk[0]), int(chunk[2])]
+        task_manager.change_chunk_status(task_uuid, chunk_t, status)
         if status == 'chunks_done' or status == 'done':
-            frames = chunk[1]-chunk[0]
+            frames = chunk_t[1]-chunk_t[0]
         else:
             frames = 0
         task_manager.add_worker(worker_name, frames)
