@@ -1,7 +1,10 @@
 import json
 import platform
+
+import requests
 import dearpygui.dearpygui as dpg
 import utils
+
 import os
 
 default_config = {
@@ -73,8 +76,30 @@ def update_config():
 
 
 def ping_server():
-    response = os.system("ping " + dpg.get_value('server/ip'))
-    print(response)
+    dpg.set_value('ping_status', 'pinging ...')
+    try:
+        r = requests.get(url=f'{dpg.get_value("server/ip")}/ping', headers={'key': dpg.get_value("server/key")})
+        if r.status_code == 200:
+            dpg.set_value('ping_status', 'OK')
+        else:
+            dpg.set_value('ping_status', 'key error ?')
+    except:
+        dpg.set_value('ping_status', 'error')
+
+
+def enable_onedrive():
+    import pyuac
+    import winreg
+    if not pyuac.isUserAdmin():
+        print("Re-launching as admin!")
+        pyuac.runAsAdmin()
+    else:
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 'SOFTWARE\Policies\Microsoft\Windows\OneDrive', access=winreg.KEY_READ | winreg.KEY_WOW64_64KEY)
+        value = winreg.QueryValueEx(key, 'DisableFileSyncNGSC')
+        print(value)
+        winreg.SetValueEx(key, 'DisableFileSyncNGSC', 0, 4, 0)
+        value = winreg.QueryValueEx(key, 'DisableFileSyncNGSC')
+        print(value)
 
 
 with dpg.window(tag='main_window'):
@@ -90,7 +115,10 @@ with dpg.window(tag='main_window'):
                     dpg.add_button(label='select folder', callback=lambda: dpg.show_item('folder_dialog_id'))
         dpg.add_separator()
     dpg.add_button(label='update_config', callback=update_config)
-    dpg.add_button(label='Ping Server', callback=ping_server)
+    with dpg.group(horizontal=True):
+        dpg.add_button(label='Ping Server', callback=ping_server)
+        dpg.add_text('/', tag='ping_status')
+    dpg.add_button(label='Enable Onedrive', callback=enable_onedrive)
 
 dpg.setup_dearpygui()
 dpg.show_viewport()

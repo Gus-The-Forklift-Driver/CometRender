@@ -1,0 +1,1 @@
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\OneDrive" /v DisableFileSyncNGSC  /t REG_DWORD  /f /d 0

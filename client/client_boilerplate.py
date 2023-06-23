@@ -87,6 +87,9 @@ class client():
         r.raise_for_status()
         # save file
         open(destination_file, 'wb').write(r.content)
+    
+    def ping(self):
+        return requests.get(url=f'{self.adress}/ping', headers={'key': self.apiKey})
 
 
 if __name__ == '__main__':
