@@ -173,7 +173,7 @@ class TaskManager():
                 # logging.critical(f'uuid : {uuid} | chunk_in : {chunk_in} | status : {status}')
                 # logging.critical(f'type : {type(chunk_in)} | 0 : {chunk_in[0]} | 1 : {chunk_in[1]}')
                 for chunk in task['chunks']:
-                    if chunk[0] == chunk_in:
+                    if chunk[0][0] == chunk_in[0] and chunk[0][1] == chunk_in[1]:
                         chunk[1] = status
                         logging.info(f'Moved {chunk_in} to {status} for {task["name"]}')
 
