@@ -75,9 +75,10 @@ def next_task(key: str | None = Header(default=None), workername: str | None = H
 
 
 @ app.post('/progress/{task_uuid}')
-def update_progress(task_uuid: str, chunk: str | float, status: str | float, worker_name: str, key: str | None = Header(default=None)):
+def update_progress(task_uuid: str, chunk: str, status: str | float, worker_name: str, key: str | None = Header(default=None)):
     if utils.verify_key(key):
-        chunk_t = [int(chunk[0]), int(chunk[2])]
+        chunk = chunk.split(',')
+        chunk_t = [int(chunk[0]), int(chunk[1])]
         task_manager.change_chunk_status(task_uuid, chunk_t, status)
         if status == 'chunks_done' or status == 'done':
             frames = chunk_t[1]-chunk_t[0]
@@ -148,4 +149,5 @@ def delete_task(task_uuid: str, key: str | None = Header(default=None)):
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run('server:app', reload=True, host='0.0.0.0', port=8000)
+    # uvicorn.run('server:app', reload=True, host='0.0.0.0', port=8000)
+    uvicorn.run('server:app', reload=False, host='0.0.0.0', port=8000)
