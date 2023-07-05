@@ -5,6 +5,7 @@ from tabulate import tabulate as taaab
 import json
 import logging
 import coloredlogs
+import utils
 
 coloredlogs.install(level=logging.INFO)
 
@@ -176,6 +177,8 @@ class TaskManager():
                     if chunk[0][0] == chunk_in[0] and chunk[0][1] == chunk_in[1]:
                         chunk[1] = status
                         logging.info(f'Moved {chunk_in} to {status} for {task["name"]}')
+                        if self.check_if_complete(uuid):
+                            utils.notify_status(f'Task : {task["name"]} complete', 'task_complete')
 
                         return
                 logging.info(f'Could not find chunk : {chunk_in} for {task["name"]}')
@@ -228,6 +231,28 @@ class TaskManager():
                     error['worker_name'] += 'cleaned'
                 return
         logging.error(f'Failed to clean task with : {task_uuid} uuid')
+
+    def check_if_complete(self, task_uuid):
+        for task_id in range(len(self.tasks)):
+            if self.tasks[task_id]['uuid'] == task_uuid:
+                chunk_count = len(self.tasks[task_id]['chunks'])
+                complete = 0
+                for chunk in self.tasks[task_id]['chunks']:
+                    if chunk[1] == 'done' or chunk[1] == 'chunks_done':
+                        complete += 1
+
+                if chunk_count == complete:
+                    return True
+                else:
+                    return False
+        return False
+
+    def set_chunks_todo(self, task_uuid):
+        for task_id in range(len(self.tasks)):
+            if self.tasks[task_id]['uuid'] == task_uuid:
+                for chunk in self.tasks[task_id]['chunks']:
+                    if chunk[1] == 'running':
+                        self.tasks[task_id][chunk][1] = 'todo'
 
 
 if __name__ == '__main__':

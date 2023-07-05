@@ -77,6 +77,12 @@ class client():
                                       'offset': str(offset)},
                              )
 
+    @retry(tries=-1, delay=1, backoff=2, max_delay=10)
+    def post_set_chunk_todo(self, uuid):
+        return requests.post(url=f'{self.adress}/set_chunk_todo/{uuid}',
+                             headers={'key': self.apiKey},
+                             )
+
     def get_file(self, path, working_dir):
         # absolute path to file
         destination_file = os.path.join(working_dir, path)
@@ -87,7 +93,7 @@ class client():
         r.raise_for_status()
         # save file
         open(destination_file, 'wb').write(r.content)
-    
+
     def ping(self):
         return requests.get(url=f'{self.adress}/ping', headers={'key': self.apiKey})
 

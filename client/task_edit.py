@@ -69,6 +69,12 @@ def move_task(sender, app_data, user_data):
     update_table()
 
 
+def set_chunk_todo(sender, app_data, user_data):
+    dpg.show_item('loading')
+    print(client.post_set_chunk_todo(user_data))
+    update_table()
+
+
 def update_table():
     dpg.show_item('loading')
     task_list = get_tasks()
@@ -114,6 +120,7 @@ def update_table():
                         dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Up, callback=move_task, user_data=[task['uuid'], -1])
                         dpg.add_button(label="Button", arrow=True, direction=dpg.mvDir_Down, callback=move_task, user_data=[task['uuid'], +1])
                         dpg.add_button(label='x', user_data=task['uuid'], callback=delete_task)
+                        dpg.add_button(label='set_todo', user_data=task['uuid'], callback=set_chunk_todo)
     dpg.delete_item('worker_container', children_only=True)
     workers = client.get_workers()
     frame_count = 0

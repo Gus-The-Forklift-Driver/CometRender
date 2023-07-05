@@ -147,6 +147,15 @@ def delete_task(task_uuid: str, key: str | None = Header(default=None)):
         raise HTTPException(status_code=400, detail="Bad request")
 
 
+@ app.post('/set_chunk_todo/{task_uuid}')
+def delete_task(task_uuid: str, key: str | None = Header(default=None)):
+    if utils.verify_key(key):
+        task_manager.set_chunks_todo(task_uuid)
+        task_manager.save_tasks_to_file()
+    else:
+        raise HTTPException(status_code=400, detail="Bad request")
+
+
 if __name__ == '__main__':
     import uvicorn
     # uvicorn.run('server:app', reload=True, host='0.0.0.0', port=8000)
